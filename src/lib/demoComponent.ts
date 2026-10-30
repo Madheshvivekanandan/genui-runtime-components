@@ -5,7 +5,7 @@
  * 48-hour flash sale. At 10:01 the shopping assistant is already using it.
  * When the sale ends, they delete it. No code change, no deploy.
  *
- * It is deliberately NOT in data/components.json: the /components form starts
+ * It is deliberately NOT in data/seed-components.json: the /components form starts
  * with it filled in, ready to save, and the /runtime-components page shows it.
  * Every piece it uses (Badge, Price, Meter…) is an atom that already exists.
  */

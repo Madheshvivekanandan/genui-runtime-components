@@ -2,10 +2,10 @@
  * FRONTEND · components/ComponentsScreen.tsx — the component library at /components.
  *
  *   Screen preview : every screen-level composite with sample content (lib/samples.ts)
- *   Components     : the composites in the store (data), with preview, edit, delete
+ *   Components     : the composites in the database, with preview, edit, delete
  *   Atoms          : the code components composites are built from
  *   Add component  : a form that saves a new composite (POST /api/components).
- *                    The agent reads the store on every request, so the new
+ *                    The agent reads the database on every request, so the new
  *                    component is on its menu from the next chat message.
  */
 "use client";
@@ -94,7 +94,7 @@ export function ComponentsScreen() {
             </section>
 
             <section className="space-y-4">
-              <SectionTitle title={`Components · ${composites.length}`} note="stored in data/components.json, drawn by one generic frame" />
+              <SectionTitle title={`Components · ${composites.length}`} note="rows in the database (data/app.db), drawn by one generic frame" />
               {composites.map((def) => (
                 <ComponentCard key={def.type} def={def} composites={composites} labels={labels} onEdit={() => setForm(fromDef(def))} />
               ))}

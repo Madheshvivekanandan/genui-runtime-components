@@ -213,7 +213,7 @@ function buildSteps(t: Trace, patchCount: number, composites: CompositeDef[]): S
             the output format (JSON patch lines). {fmt(instructions.length)} characters.
           </p>
           <p>
-            The <b>{composites.length} composites</b> (ProductCard, CartSummary…) are read from <Mono>data/components.json</Mono> on this request, so one
+            The <b>{composites.length} composites</b> (ProductCard, CartSummary…) are read from the database (<Mono>data/app.db</Mono>) on this request, so one
             added on /components is already here. See{" "}
             <Link href="/runtime-components" className="text-sky-400 hover:underline">
               Runtime components
@@ -343,7 +343,7 @@ function buildSteps(t: Trace, patchCount: number, composites: CompositeDef[]): S
           <Mapping spec={t.specAfter} />
           <div className="overflow-hidden rounded-xl border border-white/10">
             <p className="border-b border-white/10 bg-slate-900 px-3 py-1.5 text-xs text-slate-500">rendered result</p>
-            {/* The saved sample uses FlashDealCard, which the store only has after you add it on /components. */}
+            {/* The saved sample uses FlashDealCard, which the database only has after you add it on /components. */}
             <Preview spec={t.specAfter} streaming={false} composites={withDemoCard(composites)} />
           </div>
         </div>

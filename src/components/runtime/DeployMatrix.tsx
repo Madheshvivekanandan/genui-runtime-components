@@ -23,7 +23,7 @@ export function DeployMatrix() {
     <section id="deploy" className="scroll-mt-6 space-y-4">
       <h2 className="text-xl font-semibold text-white">What needs a deploy?</h2>
       <div className="grid gap-4 md:grid-cols-2">
-        <Column title="Data · no deploy" note="data/components.json, edited on /components" items={DATA} tone="border-emerald-500/40 bg-emerald-500/10" mark="✓" />
+        <Column title="Data · no deploy" note="rows in the database, edited on /components" items={DATA} tone="border-emerald-500/40 bg-emerald-500/10" mark="✓" />
         <Column title="Code · deploy" note="React + Zod, reviewed and shipped as usual" items={CODE} tone="border-white/10 bg-white/[0.03]" mark="⌁" />
       </div>
       <p className="text-sm text-slate-400">

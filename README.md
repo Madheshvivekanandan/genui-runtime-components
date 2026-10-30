@@ -21,7 +21,7 @@ No ticket, no pull request, no deploy for a card that lives two days. And becaus
 ## How it works in one picture
 
 ```
-atoms (React code, deployed)          composites (JSON data, added at runtime)
+atoms (React code, deployed)          composites (rows in SQLite, added at runtime)
 ProductImage Price Rating Badge  ──▶  ProductCard     media · header · badges · rating · price · specs · actions
 Meter LineItem Button                 ProductGrid     header · products (ProductCard ×2–6) · verdict
 Eyebrow Headline Body Caption Tag     ReviewSummary   header · score · breakdown · quotes · tags
@@ -31,11 +31,32 @@ Eyebrow Headline Body Caption Tag     ReviewSummary   header · score · breakdo
 ```
 
 - **Atoms** are the storefront's vocabulary: 12 small React components (`src/components/screen/`).
-- **Composites** are definitions stored in `data/components.json`: named slots, which atoms each slot accepts (min–max), a frame (`panel`, `accordion`, `plain`) and the **layouts** that were approved. One generic React component, `CompositeFrame`, draws every composite from its definition. That is why a new one needs no code.
-- **On every chat request** the server reads the store and rebuilds the catalog (`buildCatalog` / `buildInstructions` in `src/lib/catalog.ts`, called from `src/server/agent.ts`). A component saved at 10:00 is in the prompt of the 10:01 request.
+- **Composites** are definitions stored in a **SQLite database** (`data/app.db`): named slots, which atoms each slot accepts (min–max), a frame (`panel`, `accordion`, `plain`) and the **layouts** that were approved. One generic React component, `CompositeFrame`, draws every composite from its definition. That is why a new one needs no code.
+- **On every chat request** the server reads the database and rebuilds the catalog (`buildCatalog` / `buildInstructions` in `src/lib/catalog.ts`, called from `src/server/agent.ts`). A component saved at 10:00 is in the prompt of the 10:01 request.
 - **In the browser** `buildRegistry` maps every composite to `CompositeFrame`, so the new card renders as soon as the LLM uses it.
 
-The **`/runtime-components`** page walks through this flow step by step, with the real data at each step: form → `POST /api/components` → `checkComponent` → `data/components.json` → catalog rebuilt → the prompt lines that mention the new component → the LLM's spec → the rendered card.
+The **`/runtime-components`** page walks through this flow step by step, with the real data at each step: form → `POST /api/components` → `checkComponent` → a row in the database → catalog rebuilt → the prompt lines that mention the new component → the LLM's spec → the rendered card.
+
+### Where components are stored
+
+SQLite, built into Node (`node:sqlite`): no database server and no extra package. `src/server/db.ts` creates `data/app.db` on the first request and fills it from `data/seed-components.json`.
+
+| Table | One row per | Columns |
+|---|---|---|
+| `components` | component | `type` (unique), `definition` (the validated JSON), `source` (`seed` or `runtime`), `created_at`, `updated_at` |
+| `component_events` | change, never edited | `type`, `action` (`created` / `updated` / `deleted`), `definition` after the change, `at` |
+
+Every save and delete writes both tables in one transaction, so the history always matches the catalog: you can see that FlashDealCard was created at 10:00 and deleted on Sunday. Look inside with any SQLite tool:
+
+```bash
+sqlite3 data/app.db "SELECT type, source, updated_at FROM components"
+```
+
+```bash
+sqlite3 data/app.db "SELECT id, type, action, at FROM component_events ORDER BY id DESC"
+```
+
+`npm run db:reset` deletes the file (stop the dev server first); the next request re-seeds it. Only `server/componentStore.ts` and `server/db.ts` know about SQL: swap them for Postgres and nothing else changes.
 
 ### What needs a deploy, and what doesn't
 
@@ -58,15 +79,17 @@ The **`/runtime-components`** page walks through this flow step by step, with th
 
 ## Quick start
 
-**Prerequisites:** Node.js 22 or later, and an OpenRouter API key with credits (https://openrouter.ai/settings/keys).
+**Prerequisites:** Node.js 22.13 or later (for the built-in `node:sqlite`), and an OpenRouter API key with credits (https://openrouter.ai/settings/keys).
 
 ```bash
-git clone <this repo>
+git clone https://github.com/Madheshvivekanandan/genui-runtime-components.git
 cd genui-runtime-components
 npm install
 cp .env.example .env.local    # then paste your key into .env.local
 npm run dev                   # open http://localhost:3000
 ```
+
+No database setup: `data/app.db` is created and seeded on the first request.
 
 ### Configuration (`.env.local`)
 
@@ -74,6 +97,7 @@ npm run dev                   # open http://localhost:3000
 |---|---|---|
 | `OPENROUTER_API_KEY` | yes | OpenRouter API key |
 | `OPENROUTER_MODEL` | no | Model id as `vendor/model` from https://openrouter.ai/models. Default `google/gemini-3.5-flash`. |
+| `DATABASE_PATH` | no | Where the SQLite file lives. Default `data/app.db`. |
 
 ### Scripts
 
@@ -84,6 +108,7 @@ npm run dev                   # open http://localhost:3000
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript check |
 | `npm run eval` | Test suite against the running app (needs `npm run dev`) |
+| `npm run db:reset` | Delete the database; the next request re-seeds it (stop the dev server first) |
 
 ---
 
@@ -93,7 +118,7 @@ npm run dev                   # open http://localhost:3000
 2. **Ask** *"Any flash deals on headphones today?"*. There is no deal card yet, so it makes do with a `ProductCard`.
 3. **Open `/components`** (new tab). The form on the right is already filled in with `FlashDealCard`. Look at the live preview, then click **Save FlashDealCard**.
 4. **Back in the chat**, start a new page (the **+** button) and ask the same question again. This time the answer is a `FlashDealCard`. Nothing was rebuilt or restarted.
-5. **Open `/runtime-components`**. Step 7 shows the new lines in the system prompt; step 8 shows what the LLM actually wrote.
+5. **Open `/runtime-components`**. Step 4 shows the new row in the database and its `created` event, step 7 the new lines in the system prompt, step 8 what the LLM actually wrote.
 6. **Optional:** delete the card on `/components` and ask again. The assistant stops using it.
 
 Other things to try: *"Show the price first"* (the AI switches to another approved layout), *"Make it dark with a green accent"*, or the **Split** tab to hover a card and see its JSON.
@@ -112,10 +137,11 @@ src/
 │   ├── runtime-components/page.tsx /runtime-components → components/runtime/RuntimeFlow
 │   ├── how-it-works/page.tsx     /how-it-works         → components/HowItWorks
 │   ├── api/chat/route.ts         POST /api/chat        → server/agent
-│   └── api/components/           GET/POST /api/components, DELETE /api/components/<type>
+│   └── api/components/           GET/POST /api/components, DELETE …/<type>, GET …/history
 ├── server/                       BACKEND (guarded by `import "server-only"`)
 │   ├── agent.ts                  reads the store, builds the prompt, calls the LLM, streams
-│   └── componentStore.ts         reads/writes the composites (data/components.json)
+│   ├── db.ts                     the SQLite connection, the two tables, first-run seeding
+│   └── componentStore.ts         list / save / delete composites + their history (the SQL)
 ├── components/                   FRONTEND (browser)
 │   ├── screen/                   the storefront design: 12 atoms + CompositeFrame
 │   ├── registry.tsx              React for every code component + buildRegistry()
@@ -130,10 +156,13 @@ src/
     ├── composites.ts             composite schema and checks
     ├── demoComponent.ts          the FlashDealCard the demo adds at runtime
     ├── samples.ts                sample content for previews
+    ├── history.ts                types of the database rows and change log
     ├── spec.ts, validate.ts, trace.ts
     └── sample-traces.json        a recorded request, shown on /how-it-works before you run one
 data/
-└── components.json               the composite store (a JSON file standing in for a DB table)
+├── seed-components.json          the 5 components the database starts with
+└── app.db                        the SQLite database (created on first run, git-ignored)
+scripts/db-reset.mjs              npm run db:reset
 evals/                            test prompts (cases.ts), helpers, runner
 ```
 
@@ -144,7 +173,8 @@ evals/                            test prompts (cases.ts), helpers, runner
 - **Mock data**: there is no product database; the LLM invents products, prices and reviews. In a real store you would give the agent tools to look them up.
 - **Paid per token**: OpenRouter bills each request at the model's price. A slow or overloaded model is retried once by the chat, then shows *Try again*.
 - **Composites reuse atoms only**: a truly new visual (a countdown timer, a map) still needs a new atom in code, and a deploy.
-- **The component store is a JSON file with no auth**: anyone who can open `/components` can change what the assistant shows. Use a real database, per-tenant rows and access control beyond a demo.
+- **No auth**: anyone who can open `/components` can change what the assistant shows. Add access control, and a `tenant` column for per-store components, beyond a demo.
+- **SQLite needs a disk that persists**: fine on your machine or a single server, but serverless hosts like Vercel throw the file away between requests. Deploying there means swapping `server/db.ts` and `server/componentStore.ts` for a hosted database (Postgres, Turso).
 - **Display only**: buttons render but don't do anything.
 - **json-render is pre-1.0** (pinned to `0.21.1`): APIs may change between versions.
 
@@ -157,4 +187,5 @@ evals/                            test prompts (cases.ts), helpers, runner
 | `@openrouter/ai-sdk-provider` | 3.x | OpenRouter provider (one key, any model) |
 | `@json-render/core` / `@json-render/react` | 0.21.1 | Catalog, prompt generation, stream parsing, renderer |
 | `zod` | 4.x | Component prop and definition schemas |
+| `node:sqlite` | built into Node 22.13+ | The component database |
 | `tailwindcss` | 4.x | Styling |

@@ -1,22 +1,23 @@
 /**
- * BACKEND · server/componentStore.ts — where composite components are stored.
+ * BACKEND · server/componentStore.ts — reading and writing composite components.
  *
- * A JSON file (data/components.json) stands in for a database table: one row
- * per composite. Swap these three functions for SQL and nothing else changes.
- * The agent reads the list on every request, so a component saved from
- * /components is on the AI's menu from the next message, with no deploy.
+ * The rest of the app only knows these functions; the SQL lives here and the
+ * connection in server/db.ts. The agent calls listComposites() on every chat
+ * request, so a component saved from /components is on the AI's menu from
+ * the next message, with no deploy.
  */
 import "server-only";
 
-import { readFile, rename, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { connection } from "next/server";
 import { checkComponent } from "@/lib/catalog";
 import { compositeSchema, type CompositeDef } from "@/lib/composites";
-
-const FILE = path.join(process.cwd(), "data", "components.json");
+import type { ComponentHistory } from "@/lib/history";
+import { db, inTransaction } from "@/server/db";
 
 export async function listComposites(): Promise<CompositeDef[]> {
-  return compositeSchema.array().parse(JSON.parse(await readFile(FILE, "utf8")));
+  await connection(); // node:sqlite is synchronous: make sure this runs per request, never at build time
+  const rows = db().prepare("SELECT definition FROM components ORDER BY id").all() as { definition: string }[];
+  return rows.map((r) => compositeSchema.parse(JSON.parse(r.definition)));
 }
 
 /** Adds a composite, or replaces the one with the same type. */
@@ -27,10 +28,17 @@ export async function saveComposite(input: unknown): Promise<{ problems: string[
   if (problems.length) return { problems };
 
   const def = compositeSchema.parse(input);
-  const index = all.findIndex((c) => c.type === def.type);
-  if (index >= 0) all[index] = def;
-  else all.push(def);
-  await write(all);
+  const json = JSON.stringify(def);
+  const exists = all.some((c) => c.type === def.type);
+  const database = db();
+  inTransaction(database, () => {
+    if (exists) {
+      database.prepare("UPDATE components SET definition = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE type = ?").run(json, def.type);
+    } else {
+      database.prepare("INSERT INTO components (type, definition, source) VALUES (?, ?, 'runtime')").run(def.type, json);
+    }
+    log(def.type, exists ? "updated" : "created", json);
+  });
   return { problems: [] };
 }
 
@@ -39,12 +47,25 @@ export async function deleteComposite(type: string): Promise<{ problems: string[
   if (!all.some((c) => c.type === type)) return { problems: [`${type} does not exist`] };
   const users = all.filter((c) => Object.values(c.slots).some((s) => s.allow.includes(type)));
   if (users.length) return { problems: [`${type} is used by ${users.map((u) => u.type).join(", ")}`] };
-  await write(all.filter((c) => c.type !== type));
+
+  const database = db();
+  inTransaction(database, () => {
+    database.prepare("DELETE FROM components WHERE type = ?").run(type);
+    log(type, "deleted", null);
+  });
   return { problems: [] };
 }
 
-// Write to a temp file, then rename: a crash mid-write can't leave half a file.
-async function write(all: CompositeDef[]) {
-  await writeFile(`${FILE}.tmp`, JSON.stringify(all, null, 2) + "\n");
-  await rename(`${FILE}.tmp`, FILE);
+/** The rows and the change log, for the /runtime-components page. */
+export async function componentHistory(): Promise<ComponentHistory> {
+  await connection();
+  const database = db();
+  return {
+    components: database.prepare("SELECT type, source, created_at AS createdAt, updated_at AS updatedAt FROM components ORDER BY id").all(),
+    events: database.prepare("SELECT id, type, action, at FROM component_events ORDER BY id DESC LIMIT 20").all(),
+  } as ComponentHistory;
+}
+
+function log(type: string, action: "created" | "updated" | "deleted", definition: string | null) {
+  db().prepare("INSERT INTO component_events (type, action, definition) VALUES (?, ?, ?)").run(type, action, definition);
 }

@@ -408,7 +408,7 @@ function CompositeDetails({
   return (
     <div className="space-y-3">
       <p className="text-slate-400">
-        Not React code: a definition in data/components.json (edit it on /components), drawn by the generic frame. The AI chose the layout and filled the slots.
+        Not React code: a definition stored in the database (edit it on /components), drawn by the generic frame. The AI chose the layout and filled the slots.
       </p>
 
       <Section title="Layout (the AI picks one)">

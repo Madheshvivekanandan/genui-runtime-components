@@ -18,7 +18,7 @@ const ROUTE = `export async function POST(req: Request) {
 }`;
 
 const AGENT = `// server/agent.ts · streamAgentReply(), on EVERY chat request
-const instructions = buildInstructions(await listComposites());
+const instructions = buildInstructions(await listComposites()); // SELECT definition FROM components
 
 // lib/catalog.ts
 export function buildCatalog(composites) {
@@ -71,22 +71,29 @@ export function runtimeSteps(d: FlowData): Step[] {
       where: "app/api/components/route.ts",
       summary: (
         <p>
-          The browser sends the JSON. The route is only wiring: it hands the body to the store and answers with the problems (400) or the new list.
+          The browser sends the JSON. The route is only wiring: it hands the body to the component store and answers with the problems (400) or the new list.
         </p>
       ),
       data: <Data label="route.ts" value={ROUTE} />,
     },
     {
       lane: "server",
-      title: "Checked again, written to the store",
-      where: "server/componentStore.ts → data/components.json",
+      title: "Checked again, written to the database",
+      where: "server/componentStore.ts → SQLite (data/app.db)",
       summary: (
-        <p>
-          <Mono>saveComposite()</Mono> parses it with the Zod schema, runs <Mono>checkComponent()</Mono> again (never trust the browser), then writes
-          the file. A JSON file stands in for a database table. {d.saved ? <b>{d.def.type} is saved.</b> : <b>Not saved yet: save it on /components.</b>}
-        </p>
+        <>
+          <p>
+            <Mono>saveComposite()</Mono> parses it with the Zod schema and runs <Mono>checkComponent()</Mono> again (never trust the browser). Then, in
+            one transaction, it inserts a row in <Mono>components</Mono> (source <Mono>runtime</Mono>) and one in <Mono>component_events</Mono>.
+          </p>
+          <p>{d.saved ? <b>{d.def.type} is in the database.</b> : <b>Not saved yet: save it on /components.</b>}</p>
+        </>
       ),
-      data: <Data label={`data/components.json · ${d.storeTypes.length} components${d.saved ? "" : " (after saving)"}`} value={JSON.stringify(d.storeTypes, null, 2)} />,
+      data: d.dbRows ? (
+        <Data label="data/app.db · the two tables, live" value={d.dbRows} />
+      ) : (
+        <Data label={`components · ${d.storeTypes.length} rows${d.saved ? "" : " (after saving)"}`} value={JSON.stringify(d.storeTypes, null, 2)} />
+      ),
     },
     {
       lane: "browser",
@@ -101,7 +108,7 @@ export function runtimeSteps(d: FlowData): Step[] {
       where: "server/agent.ts · lib/catalog.ts",
       summary: (
         <p>
-          The key line: the agent reads the store on <b>every</b> request and builds the catalog from it. Each composite gets one prop,{" "}
+          The key line: the agent reads the database on <b>every</b> request and builds the catalog from it. Each composite gets one prop,{" "}
           <Mono>layout</Mono>, limited to its approved layouts.
         </p>
       ),

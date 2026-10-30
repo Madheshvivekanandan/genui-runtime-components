@@ -2,7 +2,7 @@
  * FRONTEND · components/screen/CompositeFrame.tsx — ONE frame draws every composite.
  *
  * Composites are NOT code: their definitions (lib/composites.ts, stored in
- * data/components.json) are drawn here. The frame places the named slots in
+ * the database, server/db.ts) are drawn here. The frame places the named slots in
  * the order of the layout the AI picked. Each layout writes the slots into
  * the DOM in the order you see them, so screen readers and Tab follow the
  * visual order (reordering with CSS `order` would fail WCAG 1.3.2).

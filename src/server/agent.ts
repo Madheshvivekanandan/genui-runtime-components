@@ -33,7 +33,7 @@ export async function streamAgentReply(messages: GenUIMessage[], abortSignal?: A
   let firstOutput = ""; // when the first word arrived, for the server log
 
   // 0. Built per request: json-render writes the instructions from our catalog,
-  //    the composites in the store (added from /components) and our rules.
+  //    the composites in the database (added from /components) and our rules.
   const instructions = buildInstructions(await listComposites());
 
   // 1. EDITS: if a page already exists, wrap the user's latest request with

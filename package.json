@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "eval": "tsx evals/run.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:reset": "node scripts/db-reset.mjs"
   },
   "dependencies": {
     "@ai-sdk/react": "^4.0.152",
@@ -24,7 +25,7 @@
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
-    "@types/node": "^20",
+    "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
@@ -33,8 +34,8 @@
     "tsx": "^4.23.15",
     "typescript": "^5"
   },
-  "description": "Generative UI POC: an AI agent builds web pages from a fixed React component catalog (Vercel AI SDK + json-render)",
+  "description": "Add UI components at runtime, without a redeploy: a generative-UI shopping assistant whose components live in a SQLite database (Vercel AI SDK + json-render)",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.13"
   }
 }

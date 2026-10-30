@@ -16,13 +16,15 @@ import { flowData } from "./flowData";
 import { runtimeSteps } from "./runtimeSteps";
 import { SafetyRails } from "./SafetyRails";
 import { StoryStrip } from "./StoryStrip";
+import { useHistory } from "./useHistory";
 
 export function RuntimeFlow() {
   const composites = useComposites();
   const traces = useTraces();
+  const history = useHistory(composites);
   if (!composites) return <p className="min-h-dvh bg-slate-950 p-10 text-center text-slate-500">Loading components…</p>;
 
-  const data = flowData(composites, traces);
+  const data = flowData(composites, traces, history);
   const steps = runtimeSteps(data);
 
   return (
@@ -49,7 +51,7 @@ export function RuntimeFlow() {
           </div>
           <div className="max-w-4xl space-y-3">
             <span className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${data.saved ? "bg-emerald-500/15 text-emerald-300" : "bg-amber-500/15 text-amber-300"}`}>
-              {data.saved ? `${data.def.type} is in the store` : `${data.def.type} not saved yet: add it on /components`}
+              {data.saved ? `${data.def.type} is in the database` : `${data.def.type} not saved yet: add it on /components`}
             </span>
             <p className="text-3xl leading-tight font-semibold text-white lg:text-4xl">Why would anyone change UI components at runtime?</p>
             <p className="text-slate-400">Because the people who know what the store needs today are not the people who deploy it.</p>

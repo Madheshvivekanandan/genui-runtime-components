@@ -26,7 +26,7 @@ import { checkDefinition, describeComposite, type CompositeDef } from "./composi
 export const ACCENTS = ["blue", "violet", "emerald", "rose", "amber", "slate"] as const;
 export const BADGE_TONES = ["accent", "success", "warning", "danger", "neutral"] as const;
 
-/** Components written in code. Composites from the store are added on top. */
+/** Components written in code. Composites from the database are added on top. */
 const BASE_COMPONENTS = {
   /* ---------- PAGE ---------- */
   Page: {

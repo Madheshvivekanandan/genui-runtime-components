@@ -4,7 +4,7 @@
  * Atoms (Price, Rating, Button, …) are React code in components/screen/.
  * Composites (ProductCard, CartSummary, …) are JSON: the named slots, which
  * atoms each slot may hold, and the approved layouts. They live in the
- * component store (data/components.json), can be added from /components with
+ * database (server/db.ts, seeded from data/seed-components.json), can be added from /components with
  * no deploy, and are all drawn by one generic frame (CompositeFrame).
  *
  *   Runtime components: a new composite is a new JSON entry, nothing else.

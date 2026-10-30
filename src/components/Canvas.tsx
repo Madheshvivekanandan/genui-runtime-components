@@ -114,7 +114,7 @@ type PreviewProps = {
 };
 
 export function Preview({ spec, streaming, labels = false, composites }: PreviewProps) {
-  const stored = useRegistry(); // code components + the composites from the store
+  const stored = useRegistry(); // code components + the composites from the database
   const draft = useMemo(() => composites && buildRegistry(composites), [composites]);
   const registry = draft ?? stored;
   if (!registry) return <p className="p-10 text-center text-gray-400">Loading components…</p>;

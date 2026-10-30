@@ -7,7 +7,7 @@ import { connection } from "next/server";
 import { listComposites, saveComposite } from "@/server/componentStore";
 
 export async function GET() {
-  await connection(); // always read the store at request time, never prerender it
+  await connection(); // always read the database at request time, never prerender it
   return Response.json({ composites: await listComposites() });
 }
 
