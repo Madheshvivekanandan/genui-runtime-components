@@ -1,0 +1,327 @@
+[
+  {
+    "type": "ProductCard",
+    "name": "product_card",
+    "description": "One product: picture, brand and name, badges, rating, price, key specs and buttons. Use for a single product, or inside ProductGrid for several.",
+    "frame": "panel",
+    "screenSlot": "product",
+    "slots": {
+      "media": {
+        "allow": [
+          "ProductImage"
+        ],
+        "min": 0,
+        "max": 1,
+        "style": "stack"
+      },
+      "header": {
+        "allow": [
+          "Eyebrow",
+          "Headline"
+        ],
+        "min": 1,
+        "max": 2,
+        "style": "stack"
+      },
+      "badges": {
+        "allow": [
+          "Badge"
+        ],
+        "min": 0,
+        "max": 3,
+        "style": "row"
+      },
+      "rating": {
+        "allow": [
+          "Rating"
+        ],
+        "min": 0,
+        "max": 1,
+        "style": "stack"
+      },
+      "price": {
+        "allow": [
+          "Price"
+        ],
+        "min": 1,
+        "max": 1,
+        "style": "stack"
+      },
+      "specs": {
+        "allow": [
+          "Tag"
+        ],
+        "min": 0,
+        "max": 6,
+        "style": "wrap"
+      },
+      "actions": {
+        "allow": [
+          "Button"
+        ],
+        "min": 0,
+        "max": 2,
+        "style": "row"
+      }
+    },
+    "layouts": {
+      "image-top": [
+        "media",
+        "badges",
+        "header",
+        "rating",
+        "price",
+        "divider",
+        "specs",
+        "actions"
+      ],
+      "price-first": [
+        "price",
+        "badges",
+        "header",
+        "rating",
+        "media",
+        "divider",
+        "specs",
+        "actions"
+      ]
+    }
+  },
+  {
+    "type": "ProductGrid",
+    "name": "product_grid",
+    "description": "Several products side by side: a heading, 2-6 ProductCards, and an optional one-line verdict. Use for search results, recommendations and comparisons.",
+    "frame": "plain",
+    "screenSlot": "results",
+    "slots": {
+      "header": {
+        "allow": [
+          "Eyebrow",
+          "Headline"
+        ],
+        "min": 1,
+        "max": 2,
+        "style": "stack"
+      },
+      "products": {
+        "allow": [
+          "ProductCard"
+        ],
+        "min": 2,
+        "max": 6,
+        "style": "grid"
+      },
+      "verdict": {
+        "allow": [
+          "Body"
+        ],
+        "min": 0,
+        "max": 1,
+        "style": "stack"
+      }
+    },
+    "layouts": {
+      "default": [
+        "header",
+        "products",
+        "verdict"
+      ],
+      "verdict-first": [
+        "header",
+        "verdict",
+        "products"
+      ]
+    }
+  },
+  {
+    "type": "ReviewSummary",
+    "name": "review_summary",
+    "description": "What buyers say about a product: a heading, the overall rating, a star breakdown, short quotes and pros/cons tags.",
+    "frame": "panel",
+    "screenSlot": "reviews",
+    "slots": {
+      "header": {
+        "allow": [
+          "Eyebrow",
+          "Headline"
+        ],
+        "min": 1,
+        "max": 2,
+        "style": "stack"
+      },
+      "score": {
+        "allow": [
+          "Rating"
+        ],
+        "min": 1,
+        "max": 1,
+        "style": "stack"
+      },
+      "breakdown": {
+        "allow": [
+          "Meter"
+        ],
+        "min": 0,
+        "max": 5,
+        "style": "stack"
+      },
+      "quotes": {
+        "allow": [
+          "Body"
+        ],
+        "min": 0,
+        "max": 3,
+        "style": "stack"
+      },
+      "tags": {
+        "allow": [
+          "Tag"
+        ],
+        "min": 0,
+        "max": 6,
+        "style": "wrap"
+      }
+    },
+    "layouts": {
+      "score-first": [
+        "header",
+        "score",
+        "breakdown",
+        "divider",
+        "quotes",
+        "tags"
+      ],
+      "quotes-first": [
+        "header",
+        "quotes",
+        "divider",
+        "score",
+        "breakdown",
+        "tags"
+      ]
+    }
+  },
+  {
+    "type": "CartSummary",
+    "name": "cart_summary",
+    "description": "The shopper's cart: a heading, one LineItem per product, the totals (strong for the total), a note and checkout buttons.",
+    "frame": "panel",
+    "screenSlot": "cart",
+    "slots": {
+      "header": {
+        "allow": [
+          "Eyebrow",
+          "Headline"
+        ],
+        "min": 1,
+        "max": 2,
+        "style": "stack"
+      },
+      "items": {
+        "allow": [
+          "LineItem"
+        ],
+        "min": 1,
+        "max": 8,
+        "style": "stack"
+      },
+      "totals": {
+        "allow": [
+          "LineItem"
+        ],
+        "min": 1,
+        "max": 4,
+        "style": "stack"
+      },
+      "note": {
+        "allow": [
+          "Caption"
+        ],
+        "min": 0,
+        "max": 1,
+        "style": "stack"
+      },
+      "actions": {
+        "allow": [
+          "Button"
+        ],
+        "min": 0,
+        "max": 2,
+        "style": "row"
+      }
+    },
+    "layouts": {
+      "items-first": [
+        "header",
+        "items",
+        "divider",
+        "totals",
+        "note",
+        "actions"
+      ],
+      "totals-first": [
+        "header",
+        "totals",
+        "actions",
+        "divider",
+        "items",
+        "note"
+      ]
+    }
+  },
+  {
+    "type": "DeliveryDetails",
+    "name": "delivery_details",
+    "description": "A collapsible card about shipping and returns: a tab label, a headline, delivery options as LineItems and a short note.",
+    "frame": "accordion",
+    "screenSlot": "delivery",
+    "slots": {
+      "tab": {
+        "allow": [
+          "Eyebrow"
+        ],
+        "min": 0,
+        "max": 1,
+        "style": "tab"
+      },
+      "header": {
+        "allow": [
+          "Headline"
+        ],
+        "min": 1,
+        "max": 1,
+        "style": "stack"
+      },
+      "options": {
+        "allow": [
+          "LineItem"
+        ],
+        "min": 0,
+        "max": 4,
+        "style": "stack"
+      },
+      "note": {
+        "allow": [
+          "Body"
+        ],
+        "min": 0,
+        "max": 2,
+        "style": "stack"
+      }
+    },
+    "layouts": {
+      "options-first": [
+        "header",
+        "divider",
+        "options",
+        "note"
+      ],
+      "note-first": [
+        "header",
+        "divider",
+        "note",
+        "options"
+      ]
+    }
+  }
+]

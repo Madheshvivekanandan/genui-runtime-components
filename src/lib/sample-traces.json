@@ -1,0 +1,758 @@
+[
+ {
+  "id": "CK0nOzbUDVbBIUTm",
+  "at": "2026-10-30T11:39:40.941Z",
+  "userText": "Any flash deals on headphones today?",
+  "requestBody": "{\"id\":\"L1jRdSUTVduc68ki\",\"trigger\":\"submit-message\",\"messages\":[{\"parts\":[{\"type\":\"text\",\"text\":\"Any flash deals on headphones today?\"}],\"id\":\"40LhjxzIo0yO4Hp4\",\"role\":\"user\"}]}",
+  "wire": [
+   "data: {\"type\":\"start\"}",
+   "data: {\"type\":\"start-step\"}",
+   "data: {\"type\":\"reasoning-start\",\"id\":\"BWpJoG0yl1ARUJPr\"}",
+   "data: {\"type\":\"reasoning-delta\",\"id\":\"BWpJoG0yl1ARUJPr\",\"delta\":\"**Finding Flash Deals**\\n\\nI'm focusing on identifying components that specifically cater to time-sensitive promotions. The `FlashDealCard` component seems highly relevant for sourcing today's flash deals on headphones.\\n\\n\"}",
+   "data: {\"type\":\"reasoning-delta\",\"id\":\"BWpJoG0yl1ARUJPr\",\"delta\":\"**Designing Flash Deals**\\n\\nI'm now focusing on the specific requirements of the `FlashDealCard` component. My current thought is to populate its `badges` slot with a \\\"70% OFF\\\" badge to emphasize the urgency of the deal.\\n\\n\"}",
+   "data: {\"type\":\"reasoning-delta\",\"id\":\"BWpJoG0yl1ARUJPr\",\"delta\":\"**Structuring Deal Listings**\\n\\nI'm considering how to best present multiple flash deals. My current plan is to stack two `FlashDealCard` components within the page, each highlighting a different headphone deal, to offer variety while…",
+   "data: {\"type\":\"reasoning-delta\",\"id\":\"BWpJoG0yl1ARUJPr\",\"delta\":\"**Refining Component Implementation**\\n\\nI'm scrutinizing the component implementation details, specifically regarding state management. The conflict between needing state for progressive loading versus the instruction to use literal p…",
+   "data: {\"type\":\"reasoning-delta\",\"id\":\"BWpJoG0yl1ARUJPr\",\"delta\":\"**Resolving Rule Conflicts**\\n\\nI'm grappling with conflicting instructions regarding state versus literal prop values, especially concerning lists and composite components. The latest thought is that explicitly defining each element w…",
+   "data: {\"type\":\"reasoning-delta\",\"id\":\"BWpJoG0yl1ARUJPr\",\"delta\":\"**Defining JSON Patches**\\n\\nI'm now focusing on the concrete implementation details, specifically constructing the JSON patches. My latest thought is to hardcode the two flash deals to bypass complex repeat logic on composite slots, e…",
+   "data: {\"type\":\"reasoning-delta\",\"id\":\"BWpJoG0yl1ARUJPr\",\"delta\":\"**Constructing Deal Elements**\\n\\nI'm now populating the second flash deal. My current focus is on defining the individual elements, like the price, meter, caption, and button, within the `FlashDealCard`, ensuring each has its correct …",
+   "data: {\"type\":\"reasoning-delta\",\"id\":\"BWpJoG0yl1ARUJPr\",\"delta\":\"**Populating Second Deal**\\n\\nI'm now finalizing the second flash deal by detailing its constituent elements. This involves assigning correct props to the price, meter, caption, and button, ensuring a complete and accurate representati…",
+   "data: {\"type\":\"reasoning-end\",\"id\":\"BWpJoG0yl1ARUJPr\",\"providerMetadata\":{\"openrouter\":{\"reasoning_details\":[{\"type\":\"reasoning.text\",\"text\":\"**Finding Flash Deals**\\n\\nI'm focusing on identifying components that specifically cater to time-sensitive promotions. The `FlashDealCard` component seems hi…",
+   "data: {\"type\":\"text-start\",\"id\":\"gen-1793360360-IwVfXUxaRU6yQs6Bfajc\"}",
+   "data: {\"type\":\"text-delta\", …}   ← 259 chunks: \"Yes, we have two incredible limited-time flash deals on premium noise-canceling …\"",
+   "data: {\"type\":\"text-end\",\"id\":\"gen-1793360360-IwVfXUxaRU6yQs6Bfajc\"}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/root\",\"value\":\"page\"}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/page\",\"value\":{\"type\":\"Page\",\"props\":{\"title\":\"Today's Flash Deals\",\"accent\":\"rose\",\"mode\":\"light\"},\"children\":[\"deal-1\",\"deal-2\"]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/deal-1\",\"value\":{\"type\":\"FlashDealCard\",\"props\":{\"layout\":\"image-top\"},\"slots\":{\"badges\":[\"d1-b1\",\"d1-b2\"],\"media\":[\"d1-img\"],\"header\":[\"d1-eyebrow\",\"d1-headline\"],\"price\":[\"d1-price\"],\"claimed\":[\"d1-meter\"],\"ends…",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d1-b1\",\"value\":{\"type\":\"Badge\",\"props\":{\"text\":\"60% OFF\",\"tone\":\"danger\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d1-b2\",\"value\":{\"type\":\"Badge\",\"props\":{\"text\":\"Best Seller\",\"tone\":\"accent\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d1-img\",\"value\":{\"type\":\"ProductImage\",\"props\":{\"emoji\":\"🎧\",\"alt\":\"Sony WH-1000XM5\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d1-eyebrow\",\"value\":{\"type\":\"Eyebrow\",\"props\":{\"text\":\"SONY\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d1-headline\",\"value\":{\"type\":\"Headline\",\"props\":{\"text\":\"WH-1000XM5 Wireless Noise Canceling Headphones\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d1-price\",\"value\":{\"type\":\"Price\",\"props\":{\"price\":\"$159\",\"was\":\"$399\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d1-meter\",\"value\":{\"type\":\"Meter\",\"props\":{\"label\":\"88% claimed\",\"percent\":88},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d1-ends\",\"value\":{\"type\":\"Caption\",\"props\":{\"text\":\"Offer ends in 01h 42m\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d1-btn\",\"value\":{\"type\":\"Button\",\"props\":{\"label\":\"Claim Deal\",\"variant\":\"primary\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/deal-2\",\"value\":{\"type\":\"FlashDealCard\",\"props\":{\"layout\":\"image-top\"},\"slots\":{\"badges\":[\"d2-b1\"],\"media\":[\"d2-img\"],\"header\":[\"d2-eyebrow\",\"d2-headline\"],\"price\":[\"d2-price\"],\"claimed\":[\"d2-meter\"],\"ends\":[\"d2-e…",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d2-b1\",\"value\":{\"type\":\"Badge\",\"props\":{\"text\":\"45% OFF\",\"tone\":\"danger\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d2-img\",\"value\":{\"type\":\"ProductImage\",\"props\":{\"emoji\":\"🎧\",\"alt\":\"Bose QuietComfort\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d2-eyebrow\",\"value\":{\"type\":\"Eyebrow\",\"props\":{\"text\":\"BOSE\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d2-headline\",\"value\":{\"type\":\"Headline\",\"props\":{\"text\":\"QuietComfort Wireless Noise Cancelling Headphones\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d2-price\",\"value\":{\"type\":\"Price\",\"props\":{\"price\":\"$179\",\"was\":\"$329\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d2-meter\",\"value\":{\"type\":\"Meter\",\"props\":{\"label\":\"64% claimed\",\"percent\":64},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d2-ends\",\"value\":{\"type\":\"Caption\",\"props\":{\"text\":\"Offer ends in 03h 15m\"},\"children\":[]}}}}",
+   "data: {\"type\":\"data-spec\",\"data\":{\"type\":\"patch\",\"patch\":{\"op\":\"add\",\"path\":\"/elements/d2-btn\",\"value\":{\"type\":\"Button\",\"props\":{\"label\":\"Claim Deal\",\"variant\":\"primary\"},\"children\":[]}}}}",
+   "data: {\"type\":\"finish-step\"}",
+   "data: {\"type\":\"finish\",\"finishReason\":\"stop\",\"messageMetadata\":{\"trace\":{\"model\":\"google/gemini-3.5-flash\",\"durationMs\":21814,\"instructionsChars\":23225,\"editMode\":false,\"sentPrompt\":\"Any flash deals on headphones today?\",\"rawOutput\":\"Yes, we have two incredible limited-time flash deals on premium no…",
+   "data: [DONE]"
+  ],
+  "sseTotal": 297,
+  "chunkCounts": {
+   "start": 1,
+   "start-step": 1,
+   "reasoning-start": 1,
+   "reasoning-delta": 8,
+   "reasoning-end": 1,
+   "text-start": 1,
+   "text-delta": 259,
+   "text-end": 1,
+   "data-spec": 21,
+   "finish-step": 1,
+   "finish": 1,
+   "[DONE]": 1
+  },
+  "parts": [
+   {
+    "type": "step-start"
+   },
+   {
+    "type": "reasoning",
+    "id": "BWpJoG0yl1ARUJPr",
+    "text": "**Finding Flash Deals**\n\nI'm focusing on identifying components that specifically cater to time-sensitive promotions. The `FlashDealCard` component seems highly relevant for sourcing today's flash deals on headphones.\n\n**Designing Flash Deals**\n\nI'm now focusing on the specific requirements of the `FlashDealCard` component. My current thought is to populate its `badges` slot with a \"70% OFF\" badge to emphasize the urgency of the deal.\n\n**Structuring Deal Listings**\n\nI'm considering how to best present multiple flash deals. My current plan is to stack two `FlashDealCard` components within the page, each highlighting a different headphone deal, to offer variety while maintaining focus.\n\n**Refining Component Implementation**\n\nI'm scrutinizing the component implementation details, specifically regarding state management. The conflict between needing state for progressive loading versus the instruction to use literal prop values is currently occupying my thoughts.\n\n**Resolving Rule Conflicts**\n\nI'm grappling with conflicting instructions regarding state versus literal prop values, especially concerning lists and composite components. The latest thought is that explicitly defining each element with unique IDs is the most robust approach, adhering to literal prop values while potentially sidestepping state-related complexities for these specific items.\n\n**Defining JSON Patches**\n\nI'm now focusing on the concrete implementation details, specifically constructing the JSON patches. My latest thought is to hardcode the two flash deals to bypass complex repeat logic on composite slots, ensuring direct control over each element's properties and structure.\n\n**Constructing Deal Elements**\n\nI'm now populating the second flash deal. My current focus is on defining the individual elements, like the price, meter, caption, and button, within the `FlashDealCard`, ensuring each has its correct props.\n\n**Populating Second Deal**\n\nI'm now finalizing the second flash deal by detailing its constituent elements. This involves assigning correct props to the price, meter, caption, and button, ensuring a complete and accurate representation of the offer.\n\n",
+    "providerMetadata": {
+     "openrouter": {
+      "reasoning_details": [
+       {
+        "type": "reasoning.text",
+        "text": "**Finding Flash Deals**\n\nI'm focusing on identifying components that specifically cater to time-sensitive promotions. The `FlashDealCard` component seems highly relevant for sourcing today's flash deals on headphones.\n\n**Designing Flash Deals**\n\nI'm now focusing on the specific requirements of the `FlashDealCard` component. My current thought is to populate its `badges` slot with a \"70% OFF\" badge to emphasize the urgency of the deal.\n\n**Structuring Deal Listings**\n\nI'm considering how to best present multiple flash deals. My current plan is to stack two `FlashDealCard` components within the page, each highlighting a different headphone deal, to offer variety while maintaining focus.\n\n**Refining Component Implementation**\n\nI'm scrutinizing the component implementation details, specifically regarding state management. The conflict between needing state for progressive loading versus the instruction to use literal prop values is currently occupying my thoughts.\n\n**Resolving Rule Conflicts**\n\nI'm grappling with conflicting instructions regarding state versus literal prop values, especially concerning lists and composite components. The latest thought is that explicitly defining each element with unique IDs is the most robust approach, adhering to literal prop values while potentially sidestepping state-related complexities for these specific items.\n\n**Defining JSON Patches**\n\nI'm now focusing on the concrete implementation details, specifically constructing the JSON patches. My latest thought is to hardcode the two flash deals to bypass complex repeat logic on composite slots, ensuring direct control over each element's properties and structure.\n\n**Constructing Deal Elements**\n\nI'm now populating the second flash deal. My current focus is on defining the individual elements, like the price, meter, caption, and button, within the `FlashDealCard`, ensuring each has its correct props.\n\n**Populating Second Deal**\n\nI'm now finalizing the second flash deal by detailing its constituent elements. This involves assigning correct props to the price, meter, caption, and button, ensuring a complete and accurate representation of the offer.\n\n",
+        "format": "google-gemini-v1",
+        "index": 0
+       }
+      ]
+     }
+    },
+    "state": "done"
+   },
+   {
+    "type": "text",
+    "text": "Yes, we have two incredible limited-time flash deals on premium noise-canceling headphones today! You can grab the industry-leading Sony WH-1000XM5 at 60% off or the highly comfortable Bose QuietComfort at 45% off, but act fast as stock is claiming quickly.\n\n",
+    "state": "done"
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/root",
+      "value": "page"
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/page",
+      "value": {
+       "type": "Page",
+       "props": {
+        "title": "Today's Flash Deals",
+        "accent": "rose",
+        "mode": "light"
+       },
+       "children": [
+        "deal-1",
+        "deal-2"
+       ]
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/deal-1",
+      "value": {
+       "type": "FlashDealCard",
+       "props": {
+        "layout": "image-top"
+       },
+       "slots": {
+        "badges": [
+         "d1-b1",
+         "d1-b2"
+        ],
+        "media": [
+         "d1-img"
+        ],
+        "header": [
+         "d1-eyebrow",
+         "d1-headline"
+        ],
+        "price": [
+         "d1-price"
+        ],
+        "claimed": [
+         "d1-meter"
+        ],
+        "ends": [
+         "d1-ends"
+        ],
+        "actions": [
+         "d1-btn"
+        ]
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d1-b1",
+      "value": {
+       "type": "Badge",
+       "props": {
+        "text": "60% OFF",
+        "tone": "danger"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d1-b2",
+      "value": {
+       "type": "Badge",
+       "props": {
+        "text": "Best Seller",
+        "tone": "accent"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d1-img",
+      "value": {
+       "type": "ProductImage",
+       "props": {
+        "emoji": "🎧",
+        "alt": "Sony WH-1000XM5"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d1-eyebrow",
+      "value": {
+       "type": "Eyebrow",
+       "props": {
+        "text": "SONY"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d1-headline",
+      "value": {
+       "type": "Headline",
+       "props": {
+        "text": "WH-1000XM5 Wireless Noise Canceling Headphones"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d1-price",
+      "value": {
+       "type": "Price",
+       "props": {
+        "price": "$159",
+        "was": "$399"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d1-meter",
+      "value": {
+       "type": "Meter",
+       "props": {
+        "label": "88% claimed",
+        "percent": 88
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d1-ends",
+      "value": {
+       "type": "Caption",
+       "props": {
+        "text": "Offer ends in 01h 42m"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d1-btn",
+      "value": {
+       "type": "Button",
+       "props": {
+        "label": "Claim Deal",
+        "variant": "primary"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/deal-2",
+      "value": {
+       "type": "FlashDealCard",
+       "props": {
+        "layout": "image-top"
+       },
+       "slots": {
+        "badges": [
+         "d2-b1"
+        ],
+        "media": [
+         "d2-img"
+        ],
+        "header": [
+         "d2-eyebrow",
+         "d2-headline"
+        ],
+        "price": [
+         "d2-price"
+        ],
+        "claimed": [
+         "d2-meter"
+        ],
+        "ends": [
+         "d2-ends"
+        ],
+        "actions": [
+         "d2-btn"
+        ]
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d2-b1",
+      "value": {
+       "type": "Badge",
+       "props": {
+        "text": "45% OFF",
+        "tone": "danger"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d2-img",
+      "value": {
+       "type": "ProductImage",
+       "props": {
+        "emoji": "🎧",
+        "alt": "Bose QuietComfort"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d2-eyebrow",
+      "value": {
+       "type": "Eyebrow",
+       "props": {
+        "text": "BOSE"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d2-headline",
+      "value": {
+       "type": "Headline",
+       "props": {
+        "text": "QuietComfort Wireless Noise Cancelling Headphones"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d2-price",
+      "value": {
+       "type": "Price",
+       "props": {
+        "price": "$179",
+        "was": "$329"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d2-meter",
+      "value": {
+       "type": "Meter",
+       "props": {
+        "label": "64% claimed",
+        "percent": 64
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d2-ends",
+      "value": {
+       "type": "Caption",
+       "props": {
+        "text": "Offer ends in 03h 15m"
+       },
+       "children": []
+      }
+     }
+    }
+   },
+   {
+    "type": "data-spec",
+    "data": {
+     "type": "patch",
+     "patch": {
+      "op": "add",
+      "path": "/elements/d2-btn",
+      "value": {
+       "type": "Button",
+       "props": {
+        "label": "Claim Deal",
+        "variant": "primary"
+       },
+       "children": []
+      }
+     }
+    }
+   }
+  ],
+  "versionBefore": 0,
+  "specBefore": null,
+  "specAfter": {
+   "root": "page",
+   "elements": {
+    "page": {
+     "type": "Page",
+     "props": {
+      "title": "Today's Flash Deals",
+      "accent": "rose",
+      "mode": "light"
+     },
+     "children": [
+      "deal-1",
+      "deal-2"
+     ]
+    },
+    "deal-1": {
+     "type": "FlashDealCard",
+     "props": {
+      "layout": "image-top"
+     },
+     "slots": {
+      "badges": [
+       "d1-b1",
+       "d1-b2"
+      ],
+      "media": [
+       "d1-img"
+      ],
+      "header": [
+       "d1-eyebrow",
+       "d1-headline"
+      ],
+      "price": [
+       "d1-price"
+      ],
+      "claimed": [
+       "d1-meter"
+      ],
+      "ends": [
+       "d1-ends"
+      ],
+      "actions": [
+       "d1-btn"
+      ]
+     },
+     "children": []
+    },
+    "d1-b1": {
+     "type": "Badge",
+     "props": {
+      "text": "60% OFF",
+      "tone": "danger"
+     },
+     "children": []
+    },
+    "d1-b2": {
+     "type": "Badge",
+     "props": {
+      "text": "Best Seller",
+      "tone": "accent"
+     },
+     "children": []
+    },
+    "d1-img": {
+     "type": "ProductImage",
+     "props": {
+      "emoji": "🎧",
+      "alt": "Sony WH-1000XM5"
+     },
+     "children": []
+    },
+    "d1-eyebrow": {
+     "type": "Eyebrow",
+     "props": {
+      "text": "SONY"
+     },
+     "children": []
+    },
+    "d1-headline": {
+     "type": "Headline",
+     "props": {
+      "text": "WH-1000XM5 Wireless Noise Canceling Headphones"
+     },
+     "children": []
+    },
+    "d1-price": {
+     "type": "Price",
+     "props": {
+      "price": "$159",
+      "was": "$399"
+     },
+     "children": []
+    },
+    "d1-meter": {
+     "type": "Meter",
+     "props": {
+      "label": "88% claimed",
+      "percent": 88
+     },
+     "children": []
+    },
+    "d1-ends": {
+     "type": "Caption",
+     "props": {
+      "text": "Offer ends in 01h 42m"
+     },
+     "children": []
+    },
+    "d1-btn": {
+     "type": "Button",
+     "props": {
+      "label": "Claim Deal",
+      "variant": "primary"
+     },
+     "children": []
+    },
+    "deal-2": {
+     "type": "FlashDealCard",
+     "props": {
+      "layout": "image-top"
+     },
+     "slots": {
+      "badges": [
+       "d2-b1"
+      ],
+      "media": [
+       "d2-img"
+      ],
+      "header": [
+       "d2-eyebrow",
+       "d2-headline"
+      ],
+      "price": [
+       "d2-price"
+      ],
+      "claimed": [
+       "d2-meter"
+      ],
+      "ends": [
+       "d2-ends"
+      ],
+      "actions": [
+       "d2-btn"
+      ]
+     },
+     "children": []
+    },
+    "d2-b1": {
+     "type": "Badge",
+     "props": {
+      "text": "45% OFF",
+      "tone": "danger"
+     },
+     "children": []
+    },
+    "d2-img": {
+     "type": "ProductImage",
+     "props": {
+      "emoji": "🎧",
+      "alt": "Bose QuietComfort"
+     },
+     "children": []
+    },
+    "d2-eyebrow": {
+     "type": "Eyebrow",
+     "props": {
+      "text": "BOSE"
+     },
+     "children": []
+    },
+    "d2-headline": {
+     "type": "Headline",
+     "props": {
+      "text": "QuietComfort Wireless Noise Cancelling Headphones"
+     },
+     "children": []
+    },
+    "d2-price": {
+     "type": "Price",
+     "props": {
+      "price": "$179",
+      "was": "$329"
+     },
+     "children": []
+    },
+    "d2-meter": {
+     "type": "Meter",
+     "props": {
+      "label": "64% claimed",
+      "percent": 64
+     },
+     "children": []
+    },
+    "d2-ends": {
+     "type": "Caption",
+     "props": {
+      "text": "Offer ends in 03h 15m"
+     },
+     "children": []
+    },
+    "d2-btn": {
+     "type": "Button",
+     "props": {
+      "label": "Claim Deal",
+      "variant": "primary"
+     },
+     "children": []
+    }
+   }
+  },
+  "problems": [],
+  "server": {
+   "model": "google/gemini-3.5-flash",
+   "durationMs": 21814,
+   "instructionsChars": 23225,
+   "editMode": false,
+   "sentPrompt": "Any flash deals on headphones today?",
+   "rawOutput": "Yes, we have two incredible limited-time flash deals on premium noise-canceling headphones today! You can grab the industry-leading Sony WH-1000XM5 at 60% off or the highly comfortable Bose QuietComfort at 45% off, but act fast as stock is claiming quickly.\n\n```spec\n{\"op\":\"add\",\"path\":\"/root\",\"value\":\"page\"}\n{\"op\":\"add\",\"path\":\"/elements/page\",\"value\":{\"type\":\"Page\",\"props\":{\"title\":\"Today's Flash Deals\",\"accent\":\"rose\",\"mode\":\"light\"},\"children\":[\"deal-1\",\"deal-2\"]}}\n{\"op\":\"add\",\"path\":\"/elements/deal-1\",\"value\":{\"type\":\"FlashDealCard\",\"props\":{\"layout\":\"image-top\"},\"slots\":{\"badges\":[\"d1-b1\",\"d1-b2\"],\"media\":[\"d1-img\"],\"header\":[\"d1-eyebrow\",\"d1-headline\"],\"price\":[\"d1-price\"],\"claimed\":[\"d1-meter\"],\"ends\":[\"d1-ends\"],\"actions\":[\"d1-btn\"]},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d1-b1\",\"value\":{\"type\":\"Badge\",\"props\":{\"text\":\"60% OFF\",\"tone\":\"danger\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d1-b2\",\"value\":{\"type\":\"Badge\",\"props\":{\"text\":\"Best Seller\",\"tone\":\"accent\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d1-img\",\"value\":{\"type\":\"ProductImage\",\"props\":{\"emoji\":\"🎧\",\"alt\":\"Sony WH-1000XM5\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d1-eyebrow\",\"value\":{\"type\":\"Eyebrow\",\"props\":{\"text\":\"SONY\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d1-headline\",\"value\":{\"type\":\"Headline\",\"props\":{\"text\":\"WH-1000XM5 Wireless Noise Canceling Headphones\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d1-price\",\"value\":{\"type\":\"Price\",\"props\":{\"price\":\"$159\",\"was\":\"$399\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d1-meter\",\"value\":{\"type\":\"Meter\",\"props\":{\"label\":\"88% claimed\",\"percent\":88},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d1-ends\",\"value\":{\"type\":\"Caption\",\"props\":{\"text\":\"Offer ends in 01h 42m\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d1-btn\",\"value\":{\"type\":\"Button\",\"props\":{\"label\":\"Claim Deal\",\"variant\":\"primary\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/deal-2\",\"value\":{\"type\":\"FlashDealCard\",\"props\":{\"layout\":\"image-top\"},\"slots\":{\"badges\":[\"d2-b1\"],\"media\":[\"d2-img\"],\"header\":[\"d2-eyebrow\",\"d2-headline\"],\"price\":[\"d2-price\"],\"claimed\":[\"d2-meter\"],\"ends\":[\"d2-ends\"],\"actions\":[\"d2-btn\"]},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d2-b1\",\"value\":{\"type\":\"Badge\",\"props\":{\"text\":\"45% OFF\",\"tone\":\"danger\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d2-img\",\"value\":{\"type\":\"ProductImage\",\"props\":{\"emoji\":\"🎧\",\"alt\":\"Bose QuietComfort\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d2-eyebrow\",\"value\":{\"type\":\"Eyebrow\",\"props\":{\"text\":\"BOSE\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d2-headline\",\"value\":{\"type\":\"Headline\",\"props\":{\"text\":\"QuietComfort Wireless Noise Cancelling Headphones\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d2-price\",\"value\":{\"type\":\"Price\",\"props\":{\"price\":\"$179\",\"was\":\"$329\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d2-meter\",\"value\":{\"type\":\"Meter\",\"props\":{\"label\":\"64% claimed\",\"percent\":64},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d2-ends\",\"value\":{\"type\":\"Caption\",\"props\":{\"text\":\"Offer ends in 03h 15m\"},\"children\":[]}}\n{\"op\":\"add\",\"path\":\"/elements/d2-btn\",\"value\":{\"type\":\"Button\",\"props\":{\"label\":\"Claim Deal\",\"variant\":\"primary\"},\"children\":[]}}\n```",
+   "llmCalls": [
+    {
+     "step": 0,
+     "provider": "openrouter",
+     "modelId": "google/gemini-3.5-flash",
+     "finishReason": "stop",
+     "toolCalls": 0,
+     "inputTokens": 6139,
+     "outputTokens": 3992,
+     "requestBody": {
+      "model": "google/gemini-3.5-flash",
+      "messages": [
+       {
+        "role": "system",
+        "content": [
+         {
+          "type": "text",
+          "text": "[23225 characters: the system instructions]"
+         }
+        ]
+       },
+       {
+        "role": "user",
+        "content": "Any flash deals on headphones today?"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ }
+]
