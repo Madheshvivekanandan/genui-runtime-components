@@ -258,7 +258,7 @@ function buildSteps(t: Trace, patchCount: number, composites: CompositeDef[]): S
       summary: <p>Three checks: structure (validateSpec), props against the Zod schemas (catalog.validate), and our own rules.</p>,
       data:
         t.problems.length === 0 ? (
-          <p className="text-sm text-fg">Valid: no problems found.</p>
+          <p className="text-sm text-fg">Checks passed: no problems found.</p>
         ) : (
           <ul className="list-disc space-y-1 pl-5 text-sm text-fg">
             {t.problems.map((p) => <li key={p}>{p}</li>)}

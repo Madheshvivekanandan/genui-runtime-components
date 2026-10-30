@@ -8,7 +8,7 @@
  *   - Show        : Design (plain) · Slot labels (which slot/field each atom
  *                   fills) · Outlines (every atom, component and frame-drawn
  *                   part, Highlighter.tsx)
- *   - Valid       : validation result from lib/validate.ts (hover for the problems)
+ *   - Checks      : "Checks passed" or "N issues", from lib/validate.ts (hover for details)
  */
 import { autoFixSpec, type Spec } from "@json-render/core";
 import { JSONUIProvider, Renderer } from "@json-render/react";
@@ -142,14 +142,21 @@ export function Preview({ spec, streaming, labels = false, composites, followSch
   );
 }
 
+// What lib/validate.ts checks, in words: shown as the label's tooltip.
+const CHECKS = "the page is well-formed, every value matches its schema, and every slot holds only allowed pieces, within its limits";
+
+/** The result of the automatic checks on the page the AI built. A status, not a button. */
 function ValidationBadge({ spec }: { spec: Spec }) {
   const composites = useComposites();
   if (!composites) return null;
   const problems = findProblems(spec, composites);
   const ok = problems.length === 0;
+  const tooltip = ok
+    ? `The AI's page passed every automatic check: ${CHECKS}.`
+    : `The AI's page failed ${problems.length === 1 ? "an automatic check" : `${problems.length} automatic checks`}:\n${problems.map((p) => `• ${p}`).join("\n")}`;
   return (
-    <span title={ok ? "Passed every check in lib/validate.ts" : problems.join("\n")} className={`cursor-help ${ok ? "text-muted" : "text-fg"}`}>
-      {ok ? "Valid" : `${problems.length} issue${problems.length > 1 ? "s" : ""}`}
+    <span title={tooltip} className={ok ? "text-muted" : "text-fg"}>
+      {ok ? "Checks passed" : `${problems.length} issue${problems.length > 1 ? "s" : ""}`}
     </span>
   );
 }
