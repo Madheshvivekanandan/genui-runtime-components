@@ -20,28 +20,27 @@ const CODE = [
 
 export function DeployMatrix() {
   return (
-    <section id="deploy" className="scroll-mt-6 space-y-4">
-      <h2 className="text-xl font-semibold text-white">What needs a deploy?</h2>
-      <div className="grid gap-4 md:grid-cols-2">
-        <Column title="Data · no deploy" note="rows in the database, edited on /components" items={DATA} tone="border-emerald-500/40 bg-emerald-500/10" mark="✓" />
-        <Column title="Code · deploy" note="React + Zod, reviewed and shipped as usual" items={CODE} tone="border-white/10 bg-white/[0.03]" mark="⌁" />
+    <section id="deploy" className="scroll-mt-16 space-y-6 border-t border-line pt-8">
+      <h2 className="text-lg font-medium tracking-tight text-fg">What needs a deploy?</h2>
+      <div className="grid gap-8 md:grid-cols-2">
+        <Column title="Data · no deploy" note="Rows in the database, edited on Components" items={DATA} />
+        <Column title="Code · deploy" note="React and Zod, reviewed and shipped as usual" items={CODE} />
       </div>
-      <p className="text-sm text-slate-400">
+      <p className="text-sm text-muted">
         Rule of thumb: atoms are your design system&apos;s vocabulary (code). Composites are sentences built from it (data). The AI writes the content.
       </p>
     </section>
   );
 }
 
-function Column({ title, note, items, tone, mark }: { title: string; note: string; items: string[]; tone: string; mark: string }) {
+function Column({ title, note, items }: { title: string; note: string; items: string[] }) {
   return (
-    <div className={`rounded-2xl border p-5 ${tone}`}>
-      <p className="font-semibold text-white">{title}</p>
-      <p className="mb-3 text-xs text-slate-400">{note}</p>
-      <ul className="space-y-1.5 text-sm text-slate-300">
+    <div>
+      <p className="text-sm font-medium text-fg">{title}</p>
+      <p className="mb-3 text-xs text-muted">{note}</p>
+      <ul className="divide-y divide-line border-y border-line text-sm text-fg">
         {items.map((item) => (
-          <li key={item} className="flex gap-2">
-            <span className="text-slate-500">{mark}</span>
+          <li key={item} className="py-2">
             {item}
           </li>
         ))}

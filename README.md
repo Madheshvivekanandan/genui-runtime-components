@@ -121,13 +121,15 @@ No database setup: `data/app.db` is created and seeded on the first request.
 5. **Open `/runtime-components`**. Step 4 shows the new row in the database and its `created` event, step 7 the new lines in the system prompt, step 8 what the LLM actually wrote.
 6. **Optional:** delete the card on `/components` and ask again. The assistant stops using it.
 
-Other things to try: *"Show the price first"* (the AI switches to another approved layout), *"Make it dark with a green accent"*, or the **Split** tab to hover a card and see its JSON.
+Other things to try: *"Show the price first"* (the AI switches to another approved layout), *"Make it dark"*, or **Split** in the canvas toolbar to hover a card and see its JSON.
 
 ---
 
 ## Project structure
 
 `app/` holds routing only. All other code is grouped by where it runs.
+
+The UI is deliberately minimal: neutral colour tokens plus one accent, defined once in `src/app/globals.css` and used as Tailwind classes (`bg-page`, `bg-subtle`, `text-fg`, `text-muted`, `border-line`, `text-accent`). Light and dark follow the system setting. The storefront the AI builds has its own tokens, set by `<Page>` in `src/components/registry.tsx`.
 
 ```
 src/
@@ -149,7 +151,11 @@ src/
 │   ├── ComponentsScreen.tsx      the component library and the add-component form
 │   ├── runtime/                  the /runtime-components explainer
 │   ├── explainer/blocks.tsx      step cards and code panels shared by both explainers
-│   ├── ChatScreen.tsx, Canvas.tsx, Inspector.tsx, Highlighter.tsx   chat + live canvas
+│   ├── TopBar.tsx                the navigation bar on every page
+│   ├── ChatScreen.tsx, chat/     the assistant: messages, composer, ready-made prompts
+│   ├── Canvas.tsx, Inspector.tsx, Highlighter.tsx   the live canvas, Split view, outlines
+│   ├── library/AtomPicker.tsx    picks the atoms a slot may hold (/components form)
+│   ├── useColorScheme.ts         system light/dark, for the sample previews
 │   └── HowItWorks.tsx, traceStore.ts                               one request, replayed
 └── lib/                          SHARED (no secrets, no React)
     ├── catalog.ts                atoms, rules, buildCatalog(), buildInstructions()

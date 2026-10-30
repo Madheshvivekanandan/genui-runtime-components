@@ -6,6 +6,7 @@
  */
 "use client";
 
+import Link from "next/link";
 import { Preview } from "@/components/Canvas";
 import { Data, Mono, type Step } from "@/components/explainer/blocks";
 import { sampleScreen } from "@/lib/samples";
@@ -43,7 +44,7 @@ export function runtimeSteps(d: FlowData): Step[] {
   return [
     {
       lane: "browser",
-      title: "10:00 · The merchandiser fills the form",
+      title: "The merchandiser fills the form",
       where: "app/components · components/ComponentsScreen.tsx",
       summary: (
         <p>
@@ -86,7 +87,19 @@ export function runtimeSteps(d: FlowData): Step[] {
             <Mono>saveComposite()</Mono> parses it with the Zod schema and runs <Mono>checkComponent()</Mono> again (never trust the browser). Then, in
             one transaction, it inserts a row in <Mono>components</Mono> (source <Mono>runtime</Mono>) and one in <Mono>component_events</Mono>.
           </p>
-          <p>{d.saved ? <b>{d.def.type} is in the database.</b> : <b>Not saved yet: save it on /components.</b>}</p>
+          <p className="text-muted">
+            {d.saved ? (
+              `${d.def.type} is in the database.`
+            ) : (
+              <>
+                {d.def.type} isn&apos;t saved yet.{" "}
+                <Link href="/components" className="text-fg underline underline-offset-4">
+                  Add it on Components
+                </Link>
+                .
+              </>
+            )}
+          </p>
         </>
       ),
       data: d.dbRows ? (
@@ -97,7 +110,7 @@ export function runtimeSteps(d: FlowData): Step[] {
     },
     {
       lane: "browser",
-      title: "10:01 · A shopper asks",
+      title: "A shopper asks",
       where: "components/ChatScreen.tsx · useChat",
       summary: <p>Nothing was rebuilt or restarted. The chat sends the next message as usual.</p>,
       data: <Data label="the shopper's message" value={prompt} />,
@@ -153,8 +166,8 @@ export function runtimeSteps(d: FlowData): Step[] {
       data: (
         <div className="space-y-3">
           <Data label="buildRegistry" value={REGISTRY} />
-          <div className="overflow-hidden rounded-xl border border-white/10">
-            <Preview spec={sampleScreen(d.withDeal, d.def)} composites={d.withDeal} streaming={false} labels />
+          <div className="overflow-hidden rounded-lg border border-line">
+            <Preview spec={sampleScreen(d.withDeal, d.def)} composites={d.withDeal} streaming={false} labels followScheme />
           </div>
         </div>
       ),

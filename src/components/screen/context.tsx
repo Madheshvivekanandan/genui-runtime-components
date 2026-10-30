@@ -31,7 +31,7 @@ export function FieldLabel({ text, className = "" }: { text: string | null; clas
   if (!text) return null;
   return (
     <span
-      className={`inline-block rounded-[5px] border border-[#cbcffa] bg-[var(--slot-bg,#eef0ff)] px-[0.55em] py-[0.15em] align-middle font-slot text-[11px] leading-snug font-bold text-[#4f46e5] ${className}`}
+      className={`inline-block rounded bg-accent/10 px-1 py-px align-middle font-slot text-xs leading-snug font-medium text-accent ${className}`}
     >
       {text}
     </span>

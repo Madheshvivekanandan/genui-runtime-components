@@ -1,27 +1,51 @@
 @import "tailwindcss";
 
+/*
+ * The app's design tokens: neutrals plus ONE accent, light and dark.
+ * Use them as Tailwind classes: bg-page, bg-subtle, text-fg, text-muted,
+ * border-line, text-accent. Never hard-code a colour in the app chrome.
+ * (The generated storefront has its own tokens, set by <Page> in registry.tsx.)
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-slot: var(--font-jetbrains-mono);
+  --ui-base: #ffffff;
+  --ui-subtle: #f7f7f7;
+  --ui-fg: #111111;
+  --ui-muted: #6b6b6b; /* 5.3:1 on white: readable, not loud */
+  --ui-line: #e8e8e8;
+  --ui-accent: #2563eb;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --ui-base: #0b0b0b;
+    --ui-subtle: #1a1a1a;
+    --ui-fg: #ededed;
+    --ui-muted: #9a9a9a;
+    --ui-line: #242424;
+    --ui-accent: #60a5fa;
   }
 }
 
+@theme inline {
+  --color-page: var(--ui-base);
+  --color-subtle: var(--ui-subtle);
+  --color-fg: var(--ui-fg);
+  --color-muted: var(--ui-muted);
+  --color-line: var(--ui-line);
+  --color-accent: var(--ui-accent);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-slot: var(--font-geist-mono);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ui-base);
+  color: var(--ui-fg);
+}
+
+/* One focus style for every control: visible for keyboard users only. */
+:focus-visible {
+  outline: 2px solid var(--ui-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

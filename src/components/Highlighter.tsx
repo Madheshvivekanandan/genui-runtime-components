@@ -52,7 +52,7 @@ export function HighlightLegend() {
     </span>
   );
   return (
-    <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-500">
+    <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
       {chip("atom · code", COLOR.atom)}
       {chip("component · data", COLOR.component)}
       {chip("drawn by the component", COLOR.frame, true)}

@@ -12,7 +12,7 @@ import { FieldLabel, useFieldLabel, useFrame } from "./context";
 export function Eyebrow({ text }: { text: string }) {
   const label = useFieldLabel("eyebrow");
   return (
-    <div className="flex flex-wrap items-center gap-2 text-[length:var(--eyebrow-size,12px)] font-semibold tracking-[0.12em] text-[var(--eyebrow,var(--muted))] uppercase">
+    <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-[var(--muted)]">
       <FieldLabel text={label} />
       <span>{text}</span>
     </div>
@@ -21,10 +21,10 @@ export function Eyebrow({ text }: { text: string }) {
 
 // A Headline is big on a panel, smaller inside a nested card or an accordion.
 const HEADLINE_SIZE = {
-  panel: "text-[clamp(18px,2.2cqw,26px)] leading-snug font-semibold",
-  accordion: "text-[clamp(16px,1.8cqw,21px)] leading-snug font-semibold",
-  plain: "text-[clamp(20px,2.6cqw,30px)] leading-tight font-semibold",
-  page: "text-[clamp(20px,2.6cqw,30px)] leading-tight font-semibold",
+  panel: "text-base leading-snug font-medium",
+  accordion: "text-base leading-snug font-medium",
+  plain: "text-2xl leading-tight font-semibold tracking-tight",
+  page: "text-2xl leading-tight font-semibold tracking-tight",
 };
 
 export function Headline({ text }: { text: string }) {
@@ -41,7 +41,7 @@ export function Headline({ text }: { text: string }) {
 export function Body({ text }: { text: string }) {
   const label = useFieldLabel("body");
   return (
-    <p className="text-[15px] leading-relaxed text-[var(--text)] opacity-90">
+    <p className="text-sm leading-relaxed text-[var(--text)]">
       <FieldLabel text={label} className="mr-2" />
       {text}
     </p>
@@ -51,7 +51,7 @@ export function Body({ text }: { text: string }) {
 export function Caption({ text }: { text: string }) {
   const label = useFieldLabel("caption");
   return (
-    <p className="text-[13px] leading-snug text-[var(--muted)]">
+    <p className="text-xs leading-snug text-[var(--muted)]">
       <FieldLabel text={label} className="mr-2" />
       {text}
     </p>
@@ -62,9 +62,9 @@ export function Caption({ text }: { text: string }) {
 export function Tag({ label, value }: { label: string | null; value: string }) {
   const fieldLabel = useFieldLabel("tag");
   return (
-    <span className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg)] px-2.5 py-1 text-[13px]">
+    <span className="inline-flex w-fit items-center gap-1.5 rounded-md bg-[var(--soft)] px-2 py-1 text-xs">
       <FieldLabel text={fieldLabel} />
-      {label && <span className="text-[11px] font-semibold tracking-wider text-[var(--muted)] uppercase">{label}</span>}
+      {label && <span className="text-[var(--muted)]">{label}</span>}
       <span className="text-[var(--text)]">{value}</span>
     </span>
   );

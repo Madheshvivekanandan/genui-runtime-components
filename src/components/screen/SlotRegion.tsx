@@ -35,7 +35,7 @@ export function SlotRegion({ slot, style, gap, nodes }: { slot: string; style: S
       </div>
     );
   }
-  if (style === "grid") return <div {...marks} className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,15rem),1fr))] items-start gap-4">{nodes}</div>;
+  if (style === "grid") return <div {...marks} className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,15rem),1fr))] gap-4">{nodes}</div>;
   if (style === "wrap") return <div {...marks} className="flex flex-wrap gap-2">{nodes}</div>;
   if (style === "row") return <div {...marks} className="flex flex-wrap items-center gap-2">{nodes}</div>;
   return <div {...marks} className={`flex flex-col ${gap}`}>{nodes}</div>;

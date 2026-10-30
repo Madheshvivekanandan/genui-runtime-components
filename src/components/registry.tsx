@@ -29,9 +29,10 @@ const ACCENT_HEX: Record<(typeof ACCENTS)[number], string> = {
   slate: "#475569",
 };
 const MODES = {
-  // Neutral greys, so the accent colour is the only colour on the page.
-  light: { "--bg": "#f4f4f5", "--surface": "#ffffff", "--text": "#18181b", "--muted": "#71717a", "--border": "#e4e4e7" },
-  dark: { "--bg": "#09090b", "--surface": "#18181b", "--text": "#fafafa", "--muted": "#a1a1aa", "--border": "#3f3f46" },
+  // Neutrals only: white page, white cards told apart by a hairline border.
+  // The accent colour is the only colour, and it is used sparingly.
+  light: { "--bg": "#ffffff", "--surface": "#ffffff", "--text": "#111111", "--muted": "#6b6b6b", "--border": "#e8e8e8", "--soft": "#f5f5f5" },
+  dark: { "--bg": "#0b0b0b", "--surface": "#0b0b0b", "--text": "#ededed", "--muted": "#9a9a9a", "--border": "#262626", "--soft": "#161616" },
 };
 
 const components: Components<typeof baseCatalog> = {
@@ -47,9 +48,9 @@ const components: Components<typeof baseCatalog> = {
     return (
       <div
         style={theme}
-        className="@container flex min-h-full flex-col gap-6 bg-[var(--bg)] p-6 font-sans text-[var(--text)]"
+        className="@container flex min-h-full flex-col gap-8 bg-[var(--bg)] p-[clamp(20px,4cqw,48px)] font-sans text-[var(--text)]"
       >
-        <p className="text-sm font-medium tracking-wide text-[var(--muted)] uppercase">{props.title}</p>
+        {props.title && <p className="text-sm text-[var(--muted)]">{props.title}</p>}
         {children}
       </div>
     );

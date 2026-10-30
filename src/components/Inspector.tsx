@@ -115,8 +115,8 @@ export function SplitView({
         {lit.pinned && <Outline lit={lit.pinned} tone="pin" parts={!highlight.className} />}
         {lit.hover && lit.hover.target.key !== lit.pinned?.target.key && <Outline lit={lit.hover} tone="hover" parts={!highlight.className} />}
       </div>
-      <div className="flex min-h-0 flex-col border-l border-white/10 bg-slate-950 text-slate-300">
-        <div className="max-h-[48%] shrink-0 overflow-auto border-b border-white/10">
+      <div className="flex min-h-0 flex-col border-l border-line bg-page text-fg">
+        <div className="max-h-[48%] shrink-0 overflow-auto border-b border-line">
           <InspectorCard
             spec={spec}
             target={shown}
@@ -171,7 +171,7 @@ function Outline({ lit, tone, parts }: { lit: Lit; tone: "hover" | "pin"; parts:
     <>
       <div className="pointer-events-none absolute z-10 rounded-md" style={{ ...box, outline: `2px solid ${color}`, outlineOffset: 2 }}>
         <span
-          className="absolute left-0 rounded px-1.5 py-0.5 font-mono text-[11px] whitespace-nowrap text-white shadow"
+          className="absolute left-0 rounded px-1.5 py-0.5 font-mono text-xs whitespace-nowrap text-fg shadow"
           style={{ background: color, top: box.top < 22 ? 4 : -22 }}
         >
           {lit.target.key}
@@ -187,7 +187,7 @@ function Outline({ lit, tone, parts }: { lit: Lit; tone: "hover" | "pin"; parts:
               className={`pointer-events-none absolute z-10 rounded border-2 border-dashed ${active ? "border-amber-500 bg-amber-400/15" : "border-amber-500/60"}`}
               style={{ ...p.box, minHeight: 6 }}
             >
-              <span className="absolute -top-5 right-0 rounded bg-amber-500 px-1 font-mono text-[10px] whitespace-nowrap text-white">
+              <span className="absolute -top-5 right-0 rounded bg-amber-500 px-1 font-mono text-xs whitespace-nowrap text-white">
                 {PART_LABEL[p.part.split(":")[0]]}
               </span>
             </div>
@@ -244,17 +244,17 @@ const JsonView = memo(function JsonView({
   onPick: (key: string) => void;
 }) {
   return (
-    <pre className="py-2 font-mono text-[12px] leading-[1.6]">
+    <pre className="py-2 font-mono text-xs leading-[1.6]">
       {lines.map((line, i) => {
         const key = line.ref ?? line.key; // a child reference points at that child
         const first = line.key && lines[i - 1]?.key !== line.key;
         const tint =
           line.key && line.key === pinned
-            ? "bg-fuchsia-500/20"
+            ? "bg-accent/25"
             : line.key && line.key === focus
-              ? "bg-indigo-500/30"
+              ? "bg-accent/15"
               : line.key && inside.has(line.key)
-                ? "bg-indigo-500/10"
+                ? "bg-accent/5"
                 : "";
         return (
           <div
@@ -263,7 +263,7 @@ const JsonView = memo(function JsonView({
             onClick={() => key && onPick(key)}
             className={`flex pr-3 ${tint}`}
           >
-            <span className="w-10 shrink-0 pr-3 text-right text-slate-600 select-none">{i + 1}</span>
+            <span className="w-10 shrink-0 pr-3 text-right text-muted select-none">{i + 1}</span>
             <code className="whitespace-pre">
               <Highlighted text={line.text} />
             </code>
@@ -282,10 +282,10 @@ function Highlighted({ text }: { text: string }) {
   for (const m of text.matchAll(/("(?:[^"\\]|\\.)*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?)/g)) {
     out.push(text.slice(last, m.index));
     if (m[1]) {
-      const cls = m[2] ? "text-sky-300" : isType ? "font-semibold text-fuchsia-300" : "text-emerald-300";
+      const cls = m[2] ? "text-fg" : isType ? "font-semibold text-fg" : "text-muted";
       out.push(<span key={m.index} className={cls}>{m[1]}</span>, m[2] ?? "");
     } else {
-      out.push(<span key={m.index} className="text-amber-300">{m[0]}</span>);
+      out.push(<span key={m.index} className="text-accent">{m[0]}</span>);
     }
     last = m.index + m[0].length;
   }
@@ -315,10 +315,10 @@ function InspectorCard({
   const el = target ? spec.elements[target.key] : undefined;
   if (!target || !el) {
     return (
-      <p className="p-4 text-xs leading-relaxed text-slate-400">
+      <p className="p-4 text-xs leading-relaxed text-muted">
         Hover an element on the page and its JSON lights up; the highlight stays while you scroll the JSON. Click to pin an element and see
         what it&apos;s made of (click the background to unpin). Dashed
-        <span className="mx-1 rounded border border-dashed border-amber-500 px-1 text-amber-400">boxes</span>
+        <span className="mx-1 rounded border border-dashed border-amber-500 px-1 text-amber-600">boxes</span>
         are parts the component&apos;s frame draws itself; they aren&apos;t in the JSON.
       </p>
     );
@@ -330,42 +330,42 @@ function InspectorCard({
   return (
     <div className="space-y-3 p-4 text-xs">
       <div className="flex flex-wrap items-center gap-2">
-        <code className="text-sm font-semibold text-white">{el.type}</code>
-        <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${def ? "bg-violet-500/20 text-violet-200" : kind.startsWith("atom") ? "bg-sky-500/20 text-sky-200" : "bg-white/10 text-slate-300"}`}>
+        <code className="text-sm font-semibold text-fg">{el.type}</code>
+        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${def ? "border border-line text-fg" : "bg-subtle text-fg"}`}>
           {kind}
         </span>
-        <code className="text-slate-500">{target.key}</code>
+        <code className="text-muted">{target.key}</code>
         {pinned && (
-          <button onClick={onUnpin} className="ml-auto rounded px-1.5 py-0.5 text-fuchsia-300 hover:bg-fuchsia-500/10">
+          <button onClick={onUnpin} className="ml-auto rounded px-1.5 py-0.5 text-muted hover:text-fg">
             Unpin
           </button>
         )}
       </div>
-      <p className="font-mono text-[11px] text-slate-500">{path(spec, target.key)}</p>
+      <p className="font-mono text-xs text-muted">{path(spec, target.key)}</p>
 
       {def ? (
         <>
-          <div className="space-y-2 rounded-lg border border-violet-500/30 bg-violet-500/10 p-2.5">
+          <div className="space-y-2 rounded-md border border-line p-2.5">
             <button
               onClick={() => onTogglePieces(target.key)}
-              className={`rounded-md px-2.5 py-1 font-medium ${piecesShown ? "bg-violet-500 text-white" : "bg-violet-500/20 text-violet-100 hover:bg-violet-500/30"}`}
+              className={`rounded-md px-2.5 py-1 font-medium ${piecesShown ? "bg-fg text-page" : "border border-line text-fg hover:bg-subtle"}`}
             >
               {piecesShown ? "Hide its pieces" : "◎ Show its pieces"}
             </button>
-            <p className="text-slate-400">Outlines every atom this component is assembled from, and the parts it draws itself.</p>
+            <p className="text-muted">Outlines every atom this component is assembled from, and the parts it draws itself.</p>
             {piecesShown && <HighlightLegend />}
           </div>
           <CompositeDetails spec={spec} el={el} def={def} part={target.part} composites={composites} />
         </>
       ) : (
         <>
-          <p className="text-slate-400">
+          <p className="text-muted">
             {kind.startsWith("atom")
               ? "The smallest piece of the screen design: React code in components/screen.tsx. The AI only fills its props."
               : "A component written in code (components/registry.tsx)."}
           </p>
           {props.length > 0 && (
-            <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 font-mono text-[11px]">
+            <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 font-mono text-xs">
               {props.map(([k, v]) => (
                 <Row key={k} name={k} value={typeof v === "string" ? v : JSON.stringify(v)} />
               ))}
@@ -407,25 +407,25 @@ function CompositeDetails({
 
   return (
     <div className="space-y-3">
-      <p className="text-slate-400">
+      <p className="text-muted">
         Not React code: a definition stored in the database (edit it on /components), drawn by the generic frame. The AI chose the layout and filled the slots.
       </p>
 
       <Section title="Layout (the AI picks one)">
         <div className="flex flex-wrap gap-1.5">
           {Object.keys(def.layouts).map((name) => (
-            <span key={name} className={`rounded-full px-2 py-0.5 font-mono text-[11px] ${name === layout ? "bg-indigo-500/30 text-indigo-100" : "bg-white/5 text-slate-500"}`}>
+            <span key={name} className={`rounded-full px-2 py-0.5 font-mono text-xs ${name === layout ? "bg-fg text-page" : "bg-subtle text-muted"}`}>
               {name === layout ? "✓ " : ""}
               {name}
             </span>
           ))}
         </div>
-        <p className="mt-1 font-mono text-[11px] text-slate-400">{order.join(" → ")}</p>
+        <p className="mt-1 font-mono text-xs text-muted">{order.join(" → ")}</p>
       </Section>
 
       <Section title="Slots · what the AI put in each · what the definition allows">
-        <p className="mb-1 text-slate-500">Read-only: the same rule the validator checks.</p>
-        <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 font-mono text-[11px]">
+        <p className="mb-1 text-muted">Read-only: the same rule the validator checks.</p>
+        <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 font-mono text-xs">
           {Object.entries(def.slots).map(([slot, rule]) => {
             const types = (el.slots?.[slot] ?? []).map((k) => spec.elements[k]?.type).filter(Boolean);
             return (
@@ -440,7 +440,7 @@ function CompositeDetails({
       </Section>
 
       <Section title="Atoms inside">
-        <p className="font-mono text-[11px] text-sky-200">{summarize(atoms) || "none"}</p>
+        <p className="font-mono text-xs text-fg">{summarize(atoms) || "none"}</p>
       </Section>
 
       <Section title="Drawn by the frame (not in the JSON)">
@@ -448,7 +448,7 @@ function CompositeDetails({
           {frameParts.map((p) => (
             <li
               key={p.id}
-              className={`rounded px-1.5 py-0.5 ${part && (part === p.id || (p.id === "divider" && part === "divider")) ? "bg-amber-500/20 text-amber-100" : "text-slate-400"}`}
+              className={`rounded px-1.5 py-0.5 ${part && (part === p.id || (p.id === "divider" && part === "divider")) ? "bg-amber-500/15 text-fg" : "text-muted"}`}
             >
               ▸ {p.text}
             </li>
@@ -462,7 +462,7 @@ function CompositeDetails({
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <p className="mb-1 text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{title}</p>
+      <p className="mb-1 text-xs font-medium text-muted">{title}</p>
       {children}
     </div>
   );
@@ -471,8 +471,8 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 function Row({ name, value }: { name: string; value: string }) {
   return (
     <>
-      <dt className="text-violet-300">{name}</dt>
-      <dd className="truncate text-slate-300" title={value}>
+      <dt className="text-fg">{name}</dt>
+      <dd className="truncate text-fg" title={value}>
         {value}
       </dd>
     </>

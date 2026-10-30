@@ -18,7 +18,7 @@ export function ProductImage({ emoji, alt }: { emoji: string; alt: string }) {
     <div
       role="img"
       aria-label={alt}
-      className="relative flex aspect-[16/9] max-h-56 w-full items-center justify-center rounded-xl bg-[var(--accent-soft)] text-[clamp(40px,7cqw,72px)]"
+      className="relative flex aspect-[4/3] max-h-44 w-full items-center justify-center rounded-lg bg-[var(--soft)] text-5xl"
     >
       <span aria-hidden>{emoji}</span>
       {label && <FieldLabel text={label} className="absolute top-2 left-2" />}
@@ -35,9 +35,9 @@ export function Price({ price, was }: { price: string; was: string | null }) {
   return (
     <div className="flex flex-wrap items-baseline gap-2">
       <FieldLabel text={label} />
-      <span className="text-[clamp(20px,2.4cqw,28px)] font-bold text-[var(--text)]">{price}</span>
+      <span className="text-lg font-semibold text-[var(--text)]">{price}</span>
       {was && <span className="text-sm text-[var(--muted)] line-through">{was}</span>}
-      {off > 0 && <span className="rounded-md bg-[#dc2626] px-1.5 py-0.5 text-xs font-bold text-white">−{off}%</span>}
+      {off > 0 && <span className="text-xs font-medium text-[var(--accent)]">−{off}%</span>}
     </div>
   );
 }
@@ -46,40 +46,37 @@ export function Rating({ stars, count }: { stars: number; count: number | null }
   const label = useFieldLabel("rating");
   const filled = Math.max(0, Math.min(5, stars)) * 20; // % of the five stars to colour
   return (
-    <div className="flex flex-wrap items-center gap-2 text-sm">
+    <div className="flex flex-wrap items-center gap-1.5 text-xs">
       <FieldLabel text={label} />
-      <span aria-label={`${stars} out of 5 stars`} className="relative inline-block tracking-[0.1em] text-[var(--border)]">
+      <span aria-label={`${stars} out of 5 stars`} className="relative inline-block text-[var(--border)]">
         ★★★★★
-        <span className="absolute inset-0 overflow-hidden text-[#f59e0b]" style={{ width: `${filled}%` }} aria-hidden>
+        <span className="absolute inset-0 overflow-hidden text-[var(--text)]" style={{ width: `${filled}%` }} aria-hidden>
           ★★★★★
         </span>
       </span>
-      <span className="font-semibold text-[var(--text)]">{stars.toFixed(1)}</span>
-      {count !== null && <span className="text-[var(--muted)]">({count.toLocaleString("en-US")} reviews)</span>}
+      <span className="text-[var(--text)]">{stars.toFixed(1)}</span>
+      {count !== null && <span className="text-[var(--muted)]">· {count.toLocaleString("en-US")} reviews</span>}
     </div>
   );
 }
 
 const TONE: Record<(typeof BADGE_TONES)[number], string> = {
   accent: "var(--accent)",
-  success: "#059669",
+  success: "#16a34a",
   warning: "#d97706",
   danger: "#dc2626",
-  neutral: "var(--muted)",
+  neutral: "var(--border)",
 };
 
+/** A short label with a coloured status dot, e.g. "Best seller" (accent) or "Low stock" (warning). */
 export function Badge({ text, tone }: { text: string; tone: (typeof BADGE_TONES)[number] }) {
   const label = useFieldLabel("badge");
   const color = TONE[tone] ?? TONE.neutral;
   return (
-    <span className="inline-flex w-fit items-center gap-1.5">
+    <span className="inline-flex w-fit items-center gap-1.5 text-xs text-[var(--muted)]">
       <FieldLabel text={label} />
-      <span
-        style={{ color, background: `color-mix(in srgb, ${color} 14%, transparent)` }}
-        className="rounded-full px-2.5 py-0.5 text-xs font-semibold tracking-wide uppercase"
-      >
-        {text}
-      </span>
+      <span aria-hidden className="size-1.5 rounded-full" style={{ background: color }} />
+      {text}
     </span>
   );
 }
@@ -89,16 +86,16 @@ export function Meter({ label, percent }: { label: string; percent: number }) {
   const fieldLabel = useFieldLabel("meter");
   const width = Math.max(0, Math.min(100, percent));
   return (
-    <div className="space-y-1 text-[13px]">
+    <div className="space-y-1.5 text-xs">
       <div className="flex items-center justify-between gap-2 text-[var(--muted)]">
         <span className="flex items-center gap-2">
           <FieldLabel text={fieldLabel} />
           {label}
         </span>
-        <span className="font-semibold text-[var(--text)]">{width}%</span>
+        <span className="text-[var(--text)]">{width}%</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-[var(--border)]">
-        <div className="h-full rounded-full bg-[var(--accent)]" style={{ width: `${width}%` }} />
+      <div className="h-1 overflow-hidden rounded-full bg-[var(--soft)]">
+        <div className="h-full rounded-full bg-[var(--text)]" style={{ width: `${width}%` }} />
       </div>
     </div>
   );
@@ -108,7 +105,7 @@ export function Meter({ label, percent }: { label: string; percent: number }) {
 export function LineItem({ label, detail, value, strong }: { label: string; detail: string | null; value: string; strong: boolean }) {
   const fieldLabel = useFieldLabel("line");
   return (
-    <div className={`flex items-start justify-between gap-4 ${strong ? "text-base font-bold" : "text-sm"}`}>
+    <div className={`flex items-start justify-between gap-4 text-sm ${strong ? "font-semibold" : ""}`}>
       <div className="min-w-0">
         <p className="text-[var(--text)]">
           <FieldLabel text={fieldLabel} className="mr-2" />
@@ -125,11 +122,11 @@ export function LineItem({ label, detail, value, strong }: { label: string; deta
 export function Button({ label, variant }: { label: string; variant: "primary" | "secondary" }) {
   const fieldLabel = useFieldLabel("button");
   const style =
-    variant === "primary" ? "bg-[var(--accent)] text-white hover:opacity-90" : "border border-[var(--border)] text-[var(--text)] hover:bg-[var(--accent-soft)]";
+    variant === "primary" ? "bg-[var(--text)] text-[var(--bg)] hover:opacity-85" : "border border-[var(--border)] text-[var(--text)] hover:bg-[var(--soft)]";
   return (
     <span className="inline-flex items-center gap-2">
       <FieldLabel text={fieldLabel} />
-      <button type="button" className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${style}`}>
+      <button type="button" className={`rounded-md px-3.5 py-2 text-sm font-medium transition ${style}`}>
         {label}
       </button>
     </span>

@@ -28,21 +28,21 @@ const RAILS = [
 
 export function SafetyRails() {
   return (
-    <section id="safety" className="scroll-mt-6 space-y-4">
-      <h2 className="text-xl font-semibold text-white">Safety rails</h2>
-      <div className="grid gap-4 md:grid-cols-2">
+    <section id="safety" className="scroll-mt-16 space-y-6 border-t border-line pt-8">
+      <h2 className="text-lg font-medium tracking-tight text-fg">Safety rails</h2>
+      <ol className="grid gap-x-8 gap-y-6 md:grid-cols-2">
         {RAILS.map((r, i) => (
-          <div key={r.title} className="rounded-2xl border border-white/10 bg-slate-900/50 p-5">
-            <p className="flex items-center gap-2 font-semibold text-white">
-              <span className="flex size-6 items-center justify-center rounded-md bg-violet-500 text-xs font-bold text-slate-950">{i + 1}</span>
+          <li key={r.title}>
+            <p className="text-sm font-medium text-fg">
+              <span className="mr-2 font-mono text-xs text-muted">{i + 1}</span>
               {r.title}
             </p>
-            <code className="mt-1 block text-xs text-slate-500">{r.where}</code>
-            <p className="mt-2 text-sm text-slate-300">{r.text}</p>
-          </div>
+            <code className="mt-0.5 block font-mono text-xs text-muted">{r.where}</code>
+            <p className="mt-2 text-sm text-fg">{r.text}</p>
+          </li>
         ))}
-      </div>
-      <p className="text-sm text-slate-400">Deleting is guarded too: a component another one uses (ProductCard inside ProductGrid) can&apos;t be removed.</p>
+      </ol>
+      <p className="text-sm text-muted">Deleting is guarded too: a component another one uses (ProductCard inside ProductGrid) can&apos;t be removed.</p>
     </section>
   );
 }

@@ -16,16 +16,16 @@
  */
 "use client";
 
-import { Children, useContext, useState, type CSSProperties, type ReactNode } from "react";
+import { Children, useContext, useState, type ReactNode } from "react";
 import { DIVIDER, isCollection, type CompositeDef } from "@/lib/composites";
 import { FrameContext, NO_LABEL, ScopeContext, useLabelsOn, type Scope } from "./context";
 import { SlotRegion } from "./SlotRegion";
 
-const GAP = { panel: "gap-3", accordion: "gap-3", plain: "gap-4" };
+const GAP = { panel: "gap-3", accordion: "gap-3", plain: "gap-5" };
 // Padding, not margin: the divider wrapper should be easy to hover in the inspector.
 const DIVIDER_SPACE = { panel: "py-1", accordion: "py-1", plain: "py-1" };
-const CARD = "rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-[clamp(14px,2.2cqw,24px)] shadow-[0_8px_24px_-16px_rgba(15,23,42,0.35)]";
-const TAB_TOKENS = { "--eyebrow": "#ffffff", "--slot-bg": "#ffffff", "--eyebrow-size": "11px" } as CSSProperties;
+// A white card told apart from the page by a hairline border: no shadow, no fill.
+const CARD = "rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5";
 
 export function CompositeFrame({ def, layout, slots }: { def: CompositeDef; layout: string; slots?: Record<string, ReactNode> }) {
   const parent = useContext(ScopeContext);
@@ -70,7 +70,7 @@ export function CompositeFrame({ def, layout, slots }: { def: CompositeDef; layo
     <p
       data-frame-part="slot-label"
       title={`layout: ${layout}`}
-      className="w-fit rounded-md border border-[#cbcffa] bg-[#eef0ff] px-2 py-0.5 font-slot text-[11px] font-bold tracking-[0.04em] text-[#4f46e5]"
+      className="w-fit rounded bg-accent/10 px-1.5 py-0.5 font-slot text-xs font-medium text-accent"
     >
       SLOT · {def.screenSlot} → {def.name}
     </p>
@@ -90,14 +90,11 @@ export function CompositeFrame({ def, layout, slots }: { def: CompositeDef; layo
     // Accordion: the first slot of the layout stays visible next to the toggle; the rest collapses.
     const first = flow.findIndex((node, i) => order[i] !== DIVIDER && node);
     body = (
-      <div className={tab.length ? "pt-3" : ""}>
-        <section data-frame-part="card" className={`relative ${CARD} ${tab.length ? "pt-7" : ""}`}>
+      <div>
+        <section data-frame-part="card" className={CARD}>
+          {/* The tab: a quiet label above the content, not a floating pill. */}
           {tab.length > 0 && (
-            <div
-              data-frame-part={`tab:${tabSlot}`}
-              style={TAB_TOKENS}
-              className="absolute top-0 left-5 flex -translate-y-1/2 items-center rounded-lg bg-[var(--accent)] px-3 py-1.5 shadow-sm"
-            >
+            <div data-frame-part={`tab:${tabSlot}`} className="mb-2 w-fit">
               {tab}
             </div>
           )}
@@ -112,7 +109,7 @@ export function CompositeFrame({ def, layout, slots }: { def: CompositeDef; layo
               onClick={() => setOpen(!open)}
               aria-expanded={open}
               aria-label={open ? "Collapse" : "Expand"}
-              className="flex size-8 shrink-0 items-center justify-center rounded-full border border-[var(--border)] text-[var(--muted)] transition hover:bg-[var(--accent-soft)]"
+              className="flex size-7 shrink-0 items-center justify-center rounded-md text-[var(--muted)] transition hover:bg-[var(--soft)]"
             >
               <svg viewBox="0 0 24 24" className={`size-4 transition ${open ? "" : "rotate-180"}`} fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6 15 12 9 18 15" />

@@ -3,13 +3,13 @@
  *
  * Replays ONE real chat turn step by step, from the prompt to the screen,
  * using the trace recorded by components/traceStore.ts (or a saved sample).
- * Layout: header (prompt, flow strip, numbers) · sticky timeline · step cards.
+ * Layout: header (the prompt, the numbers) · sticky step list · the steps.
  */
 "use client";
 
 import { SPEC_DATA_PART_TYPE, type Spec } from "@json-render/core";
 import Link from "next/link";
-import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Preview } from "@/components/Canvas";
 import { useComposites } from "@/components/compositeStore";
 import { useTraces } from "@/components/traceStore";
@@ -19,7 +19,8 @@ import { FLASH_DEAL_CARD } from "@/lib/demoComponent";
 import sampleTraces from "@/lib/sample-traces.json";
 import { childKeys } from "@/lib/spec";
 import type { Trace } from "@/lib/trace";
-import { Data, LANES, Mono, StepCard, type Lane, type Step } from "@/components/explainer/blocks";
+import { Data, Mono, StepCard, StepNav, type Step } from "@/components/explainer/blocks";
+import { TopBar } from "@/components/TopBar";
 
 export function HowItWorks() {
   const stored = useTraces();
@@ -29,7 +30,7 @@ export function HowItWorks() {
   const t = traces[Math.min(index, traces.length - 1)];
   const active = useActiveSection(13);
 
-  if (!t) return <p className="p-10">No trace yet: send a prompt in the app first.</p>;
+  if (!t) return <p className="p-10 text-sm text-muted">No trace yet: send a prompt in the app first.</p>;
 
   const s = t.server;
   const call = s?.llmCalls[0];
@@ -37,25 +38,20 @@ export function HowItWorks() {
   const steps = buildSteps(t, patches.length, composites);
 
   return (
-    <div className="min-h-dvh w-full bg-slate-950 font-sans text-slate-300">
-      {/* ================= HEADER ================= */}
-      <header className="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-indigo-950 via-slate-950 to-slate-950">
-        <div className="pointer-events-none absolute -top-32 right-0 size-[32rem] rounded-full bg-violet-600/20 blur-3xl" />
-        <div className="relative space-y-8 px-6 py-8 lg:px-10">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-violet-600 font-bold text-white">G</span>
-              <div>
-                <p className="text-sm font-semibold text-white">Shopping assistant</p>
-                <p className="text-xs text-slate-400">How it works · one real request, end to end</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-2 text-sm">
-              {!stored.length && <span className="rounded-full bg-white/10 px-3 py-1 text-xs">saved sample</span>}
+    <div className="min-h-dvh bg-page text-fg">
+      <TopBar current="/how-it-works" />
+      <div className="mx-auto max-w-6xl px-6 py-14">
+        {/* ================= HEADER: the request, the path, the numbers ================= */}
+        <header className="space-y-8">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted">
+            <span>{s?.editMode ? `Edit of page v${t.versionBefore}` : "New page"}</span>
+            {!stored.length && <span>· Saved sample</span>}
+            {traces.length > 1 && (
               <select
                 value={index}
                 onChange={(e) => setIndex(Number(e.target.value))}
-                className="max-w-xs rounded-lg border border-white/15 bg-slate-900 px-3 py-1.5 text-slate-200"
+                aria-label="Request"
+                className="max-w-xs rounded-md border border-line bg-page px-2 py-1 text-fg"
               >
                 {traces.map((tr, i) => (
                   <option key={tr.id} value={i}>
@@ -64,87 +60,30 @@ export function HowItWorks() {
                   </option>
                 ))}
               </select>
-              <Link href="/runtime-components" className="rounded-lg px-3 py-1.5 font-medium text-sky-400 hover:bg-sky-500/10">
-                Runtime components
-              </Link>
-              <Link href="/" className="rounded-lg bg-white px-3 py-1.5 font-medium text-slate-900 hover:bg-slate-200">
-                ← Back to app
-              </Link>
-            </div>
+            )}
           </div>
+          <h1 className="max-w-3xl text-3xl font-semibold tracking-tight">“{t.userText}”</h1>
+          <dl className="grid grid-cols-2 gap-6 border-t border-line pt-6 sm:grid-cols-3 lg:grid-cols-5">
+            <Stat label="LLM calls" value={String(s?.llmCalls.length ?? "?")} note="requests to OpenRouter" />
+            <Stat label="Tokens in" value={fmt(call?.inputTokens)} note="instructions + chat" />
+            <Stat label="Tokens out" value={fmt(call?.outputTokens)} note="sentence + patches" />
+            <Stat label="Patches" value={String(patches.length)} note="JSON lines applied" />
+            <Stat label="Total time" value={s ? `${(s.durationMs / 1000).toFixed(1)}s` : "?"} note={s?.model ?? ""} />
+          </dl>
+        </header>
 
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div className="max-w-4xl space-y-3">
-              <span className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${s?.editMode ? "bg-amber-500/15 text-amber-300" : "bg-emerald-500/15 text-emerald-300"}`}>
-                {s?.editMode ? `Edit of page v${t.versionBefore}` : "New page"}
-              </span>
-              <p className="text-3xl leading-tight font-semibold text-white lg:text-4xl">“{t.userText}”</p>
-            </div>
-            <FlowStrip />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
-            <Stat label="LLM calls" value={String(s?.llmCalls.length ?? "?")} note="HTTP requests to OpenRouter" accent="from-amber-500/20" />
-            <Stat label="Tokens in" value={fmt(call?.inputTokens)} note="instructions + chat" accent="from-violet-500/20" />
-            <Stat label="Tokens out" value={fmt(call?.outputTokens)} note="sentence + patches" accent="from-violet-500/20" />
-            <Stat label="Patches" value={String(patches.length)} note="JSON lines applied" accent="from-sky-500/20" />
-            <Stat label="Total time" value={s ? `${(s.durationMs / 1000).toFixed(1)}s` : "?"} note={s?.model ?? ""} accent="from-emerald-500/20" />
-          </div>
+        {/* ================= STEP LIST + STEPS ================= */}
+        <div className="mt-16 grid gap-12 lg:grid-cols-[16rem_minmax(0,1fr)]">
+          <aside className="hidden lg:block">
+            <StepNav steps={steps} active={active} extra={[{ id: "why-ai-sdk", label: "Why the Vercel AI SDK" }]} />
+          </aside>
+          <main className="min-w-0 space-y-12">
+            {steps.map((st, i) => (
+              <StepCard key={i} n={i + 1} step={st} />
+            ))}
+            <WhyAiSdk />
+          </main>
         </div>
-      </header>
-
-      {/* ================= TIMELINE + STEPS ================= */}
-      <div className="grid gap-8 px-6 py-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:px-10">
-        <aside className="hidden lg:block">
-          <nav className="sticky top-6 rounded-2xl border border-white/10 bg-slate-900/60 p-4">
-            <p className="mb-3 text-xs font-semibold tracking-wider text-slate-500 uppercase">The 13 steps</p>
-            <ol className="relative space-y-1">
-              <span className="absolute top-3 bottom-3 left-[0.95rem] w-px bg-white/10" />
-              {steps.map((st, i) => {
-                const n = i + 1;
-                const on = `step-${n}` === active;
-                return (
-                  <li key={n}>
-                    <a
-                      href={`#step-${n}`}
-                      className={`relative flex items-center gap-3 rounded-lg px-1.5 py-1.5 text-sm transition ${on ? "bg-white/10 text-white" : "text-slate-400 hover:bg-white/5 hover:text-slate-200"}`}
-                    >
-                      <span className={`z-10 flex size-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-slate-950 ${LANES[st.lane].bg} ${on ? `ring-4 ${LANES[st.lane].ring}` : ""}`}>
-                        {n}
-                      </span>
-                      <span className="truncate">{st.title}</span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ol>
-            <a
-              href="#why-ai-sdk"
-              className={`mt-2 flex items-center gap-3 rounded-lg px-1.5 py-1.5 text-sm text-emerald-300 ${active === "why-ai-sdk" ? "bg-white/10" : "hover:bg-white/5"}`}
-            >
-              <span
-                className={`flex size-5 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-slate-950 ${active === "why-ai-sdk" ? "ring-4 ring-emerald-500/40" : ""}`}
-              >
-                ?
-              </span>
-              Why the Vercel AI SDK
-            </a>
-            <div className="mt-4 flex flex-wrap gap-2 border-t border-white/10 pt-3 text-xs">
-              {(Object.keys(LANES) as Lane[]).map((l) => (
-                <span key={l} className="flex items-center gap-1.5">
-                  <span className={`size-2 rounded-full ${LANES[l].bg}`} /> {LANES[l].label}
-                </span>
-              ))}
-            </div>
-          </nav>
-        </aside>
-
-        <main className="min-w-0 space-y-5">
-          {steps.map((st, i) => (
-            <StepCard key={i} n={i + 1} step={st} />
-          ))}
-          <WhyAiSdk />
-        </main>
       </div>
     </div>
   );
@@ -215,7 +154,7 @@ function buildSteps(t: Trace, patchCount: number, composites: CompositeDef[]): S
           <p>
             The <b>{composites.length} composites</b> (ProductCard, CartSummary…) are read from the database (<Mono>data/app.db</Mono>) on this request, so one
             added on /components is already here. See{" "}
-            <Link href="/runtime-components" className="text-sky-400 hover:underline">
+            <Link href="/runtime-components" className="text-accent hover:underline">
               Runtime components
             </Link>
             .
@@ -277,7 +216,7 @@ function buildSteps(t: Trace, patchCount: number, composites: CompositeDef[]): S
           </p>
           <div className="flex flex-wrap gap-1.5">
             {Object.entries(t.chunkCounts).map(([type, n]) => (
-              <span key={type} className={`rounded-md px-2 py-0.5 font-mono text-xs ${type === "data-spec" ? "bg-sky-500/20 text-sky-300" : "bg-white/5 text-slate-400"}`}>
+              <span key={type} className={`rounded-md px-2 py-0.5 font-mono text-xs ${type === "data-spec" ? "bg-fg text-page" : "bg-subtle text-muted"}`}>
                 {type} × {n}
               </span>
             ))}
@@ -319,11 +258,9 @@ function buildSteps(t: Trace, patchCount: number, composites: CompositeDef[]): S
       summary: <p>Three checks: structure (validateSpec), props against the Zod schemas (catalog.validate), and our own rules.</p>,
       data:
         t.problems.length === 0 ? (
-          <div className="flex items-center gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-emerald-300">
-            <span className="text-xl">✓</span> Valid: no problems found
-          </div>
+          <p className="text-sm text-fg">Valid: no problems found.</p>
         ) : (
-          <ul className="list-disc space-y-1 rounded-xl border border-amber-500/30 bg-amber-500/10 py-3 pr-4 pl-8 text-amber-300">
+          <ul className="list-disc space-y-1 pl-5 text-sm text-fg">
             {t.problems.map((p) => <li key={p}>{p}</li>)}
           </ul>
         ),
@@ -341,8 +278,8 @@ function buildSteps(t: Trace, patchCount: number, composites: CompositeDef[]): S
       data: t.specAfter && (
         <div className="grid gap-4 2xl:grid-cols-2">
           <Mapping spec={t.specAfter} />
-          <div className="overflow-hidden rounded-xl border border-white/10">
-            <p className="border-b border-white/10 bg-slate-900 px-3 py-1.5 text-xs text-slate-500">rendered result</p>
+          <div className="overflow-hidden rounded-lg border border-line">
+            <p className="border-b border-line bg-subtle px-3 py-1.5 text-xs text-muted">rendered result</p>
             {/* The saved sample uses FlashDealCard, which the database only has after you add it on /components. */}
             <Preview spec={t.specAfter} streaming={false} composites={withDemoCard(composites)} />
           </div>
@@ -455,38 +392,37 @@ const ALTERNATIVES: { name: string; is: string; why: string }[] = [
 
 function WhyAiSdk() {
   return (
-    <section id="why-ai-sdk" className="scroll-mt-6 space-y-6 rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-slate-900/60 to-slate-900/60 p-6">
+    <section id="why-ai-sdk" className="scroll-mt-16 space-y-8 border-t border-line pt-8">
       <div className="space-y-2">
-        <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-300">Why this stack</span>
-        <h2 className="text-2xl font-semibold text-white">Why the Vercel AI SDK</h2>
-        <p className="max-w-3xl text-[15px] leading-relaxed">
+        <h2 className="text-lg font-medium tracking-tight text-fg">Why the Vercel AI SDK</h2>
+        <p className="max-w-3xl text-sm leading-relaxed">
           The AI SDK is an open-source TypeScript <b>toolkit</b> for AI apps: it handles talking to the model, streaming and chat state, on any Node
           server. json-render handles the generative-UI part. In this request the SDK did six jobs:
         </p>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
+      <div className="grid gap-x-8 gap-y-6 md:grid-cols-2 2xl:grid-cols-3">
         {SDK_BENEFITS.map((b) => (
-          <div key={b.title} className="flex flex-col rounded-xl border border-white/10 bg-slate-950/60 p-4">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <p className="font-semibold text-white">{b.title}</p>
+          <div key={b.title} className="flex flex-col border-t border-line pt-4">
+            <div className="mb-2 flex flex-wrap items-baseline gap-2">
+              <p className="text-sm font-medium text-fg">{b.title}</p>
               {b.steps.map((n) => (
-                <a key={n} href={`#step-${n}`} className="rounded-md bg-white/10 px-1.5 py-0.5 text-[11px] text-slate-300 hover:bg-white/20">
-                  step {n}
+                <a key={n} href={`#step-${n}`} className="font-mono text-xs text-muted hover:text-fg">
+                  {String(n).padStart(2, "0")}
                 </a>
               ))}
             </div>
             <p className="flex-1 text-sm leading-relaxed">{b.what}</p>
-            <p className="mt-3 border-t border-white/10 pt-2 text-xs text-rose-300/80">Without it: {b.without}</p>
+            <p className="mt-2 text-xs text-muted">Without it: {b.without}</p>
           </div>
         ))}
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-white">Why not the alternatives?</h3>
-        <div className="overflow-x-auto rounded-xl border border-white/10">
+        <h3 className="text-sm font-medium text-fg">Why not the alternatives?</h3>
+        <div className="overflow-x-auto rounded-lg border border-line">
           <table className="w-full min-w-[44rem] text-left text-sm">
-            <thead className="bg-slate-900 text-xs text-slate-500">
+            <thead className="bg-subtle text-xs text-muted">
               <tr>
                 <th className="px-4 py-2 font-medium">Option</th>
                 <th className="px-4 py-2 font-medium">What it is</th>
@@ -495,9 +431,9 @@ function WhyAiSdk() {
             </thead>
             <tbody>
               {ALTERNATIVES.map((a) => (
-                <tr key={a.name} className="border-t border-white/5 align-top">
-                  <td className="px-4 py-2.5 font-medium text-white">{a.name}</td>
-                  <td className="px-4 py-2.5 text-slate-400">{a.is}</td>
+                <tr key={a.name} className="border-t border-line align-top">
+                  <td className="px-4 py-2.5 font-medium text-fg">{a.name}</td>
+                  <td className="px-4 py-2.5 text-muted">{a.is}</td>
                   <td className="px-4 py-2.5">{a.why}</td>
                 </tr>
               ))}
@@ -525,47 +461,23 @@ function WhyAiSdk() {
 /* Building blocks                                                     */
 /* ================================================================== */
 
-function FlowStrip() {
-  const segments: { lane: Lane; steps: string }[] = [
-    { lane: "browser", steps: "1–2" },
-    { lane: "server", steps: "3–6" },
-    { lane: "llm", steps: "7–8" },
-    { lane: "server", steps: "9" },
-    { lane: "browser", steps: "10–13" },
-  ];
+function Stat({ label, value, note }: { label: string; value: string; note: string }) {
   return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      {segments.map((seg, i) => (
-        <Fragment key={i}>
-          {i > 0 && <span className="text-slate-600">→</span>}
-          <a href={`#step-${seg.steps.split("–")[0]}`} className={`rounded-xl px-3 py-2 text-center ring-1 ${LANES[seg.lane].soft} ${LANES[seg.lane].ring}`}>
-            <span className="block text-sm font-semibold">{LANES[seg.lane].label}</span>
-            <span className="block text-[11px] opacity-70">steps {seg.steps}</span>
-          </a>
-        </Fragment>
-      ))}
-    </div>
-  );
-}
-
-function Stat({ label, value, note, accent }: { label: string; value: string; note: string; accent: string }) {
-  return (
-    <div className={`rounded-2xl border border-white/10 bg-gradient-to-br ${accent} to-transparent p-4`}>
-      <p className="text-xs text-slate-400">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-white">{value}</p>
-      <p className="truncate text-xs text-slate-500">{note}</p>
+    <div>
+      <dt className="text-xs text-muted">{label}</dt>
+      <dd className="mt-1 text-xl font-semibold tracking-tight text-fg">{value}</dd>
+      <dd className="truncate text-xs text-muted">{note}</dd>
     </div>
   );
 }
 
 function Compare({ title, tone, active, children }: { title: string; tone: "emerald" | "slate"; active?: boolean; children: ReactNode }) {
-  const style = tone === "emerald" ? "border-emerald-500/40 bg-emerald-500/10" : "border-white/10 bg-white/[0.03]";
   return (
-    <div className={`rounded-xl border p-4 ${style}`}>
-      <p className="mb-1.5 flex items-center gap-2 font-semibold text-white">
-        {title} {active && <span className="rounded-full bg-emerald-500 px-2 py-0.5 text-[10px] text-slate-950">USED</span>}
+    <div className={`rounded-lg border p-4 ${tone === "emerald" ? "border-fg/30" : "border-line"}`}>
+      <p className="mb-1.5 flex items-center gap-2 text-sm font-medium text-fg">
+        {title} {active && <span className="text-xs font-normal text-muted">· used here</span>}
       </p>
-      <p className="text-sm text-slate-300">{children}</p>
+      <p className="text-sm text-fg">{children}</p>
     </div>
   );
 }
@@ -586,9 +498,9 @@ function Mapping({ spec }: { spec: Spec }) {
   visit(spec.root, 0);
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-white/10">
+    <div className="overflow-x-auto rounded-lg border border-line">
       <table className="w-full min-w-[36rem] text-left text-xs">
-        <thead className="bg-slate-900 text-slate-500">
+        <thead className="bg-subtle text-muted">
           <tr>
             <th className="px-3 py-2 font-medium whitespace-nowrap">element (from the LLM)</th>
             <th className="px-3 py-2 font-medium">type</th>
@@ -598,14 +510,14 @@ function Mapping({ spec }: { spec: Spec }) {
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.key} className="border-t border-white/5 hover:bg-white/[0.03]">
-              <td className="px-3 py-1.5 font-mono whitespace-nowrap text-slate-300" style={{ paddingLeft: `${0.75 + r.depth * 1.25}rem` }}>
-                {r.depth > 0 && <span className="text-slate-600">└ </span>}
+            <tr key={r.key} className="border-t border-line hover:bg-subtle">
+              <td className="px-3 py-1.5 font-mono whitespace-nowrap text-fg" style={{ paddingLeft: `${0.75 + r.depth * 1.25}rem` }}>
+                {r.depth > 0 && <span className="text-muted">└ </span>}
                 {r.key}
               </td>
-              <td className="px-3 py-1.5 font-semibold text-sky-300">{r.type}</td>
-              <td className="px-3 py-1.5 font-mono text-violet-300">registry.{r.type}</td>
-              <td className="max-w-xs truncate px-3 py-1.5 text-slate-500">{r.props}</td>
+              <td className="px-3 py-1.5 font-medium text-fg">{r.type}</td>
+              <td className="px-3 py-1.5 font-mono text-muted">registry.{r.type}</td>
+              <td className="max-w-xs truncate px-3 py-1.5 text-muted">{r.props}</td>
             </tr>
           ))}
         </tbody>

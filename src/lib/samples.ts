@@ -129,6 +129,6 @@ export function sampleScreen(composites: CompositeDef[], only?: CompositeDef): S
     Object.assign(elements, sample.elements);
     return sample.key;
   });
-  elements.screen = { type: "Page", props: { title: "Storefront preview", accent: "blue", mode: "light" }, children };
+  elements.screen = { type: "Page", props: { title: "", accent: "blue", mode: "light" }, children }; // no title: the page around it has one
   return { root: "screen", elements };
 }
